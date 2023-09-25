@@ -1,0 +1,13 @@
+services:
+  db-test:
+    container_name: thegame-db-test
+    image: postgres:16-alpine
+    restart: always
+    ports:
+      - 5433:5432
+    environment:
+      POSTGRES_DB: thegametest
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+    volumes:
+      - ./tmp/db:/var/lib/postgresql/data

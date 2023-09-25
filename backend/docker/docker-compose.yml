@@ -1,0 +1,12 @@
+services:
+  db:
+    container_name: thegame-db
+    image: postgres:16-alpine
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: thegame
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+    volumes:
+      - ./tmp/db:/var/lib/postgresql/data

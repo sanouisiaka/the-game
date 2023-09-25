@@ -1,11 +1,12 @@
 {
+  "preset": "ts-jest",
   "moduleFileExtensions": [
     "js",
     "json",
     "ts"
   ],
   "rootDir": ".",
-  "testRegex": ".*\\.spec\\.ts$",
+  "testRegex": ".*\\.(spec|steps)\\.ts$",
   "transform": {
     "^.+\\.(t|j)s$": "ts-jest"
   },

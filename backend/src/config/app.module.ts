@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
-import { ExampleModule } from './modules/example.module';
 import { ConfigModule } from '@nestjs/config';
+import { CreateUserModule } from './modules/createUser.module';
 
 @Module({
-  imports: [ExampleModule, ConfigModule.forRoot({ isGlobal: true })],
+  imports: [CreateUserModule, ConfigModule.forRoot({ isGlobal: true })],
   providers: [],
 })
 export class AppModule {}

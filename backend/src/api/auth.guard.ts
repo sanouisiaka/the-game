@@ -15,6 +15,7 @@ export class AuthGuard implements CanActivate {
     }
 
     return this.verify(token)
+      .then((user) => (request.user = user))
       .then(() => true)
       .catch(() => {
         return false;
@@ -26,14 +27,22 @@ export class AuthGuard implements CanActivate {
     return type === 'Bearer' ? token : undefined;
   }
 
-  private async verify(token: string) {
+  private async verify(token: string): Promise<UserInfo> {
     const client = new OAuth2Client();
 
-    const ticket = await client.verifyIdToken({
-      idToken: token,
-      audience: this.configService.get('GOOGLE_AUTH_CLIENT_ID'),
-    });
-    const payload = ticket.getPayload();
-    console.log(payload);
+    return await client
+      .verifyIdToken({
+        idToken: token,
+        audience: this.configService.get('GOOGLE_AUTH_CLIENT_ID'),
+      })
+      .then((ticket) => ticket.getPayload() as UserInfo);
+    // const payload = ticket.getPayload();
+    // console.log(payload);
   }
+}
+
+export class UserInfo {
+  email: string;
+  name: string;
+  family_name: string;
 }
