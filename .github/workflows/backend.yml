@@ -32,10 +32,27 @@ jobs:
         working-directory: ./backend
         run: npm run lint
 
-      - name: Run unit test
+      - name: Prepare tests database
         working-directory: ./backend
-        run: npm run test:cov
+        run: npm run docker:test:up && npm run prisma:deploy:migration
 
-      - name: Run e2e test
+#      - name: Run unit test
+#        working-directory: ./backend
+#        run: npm run test:cov
+
+      - name: Run acceptance tests
         working-directory: ./backend
-        run: npm run test:e2e
+        run: npm run test:acceptance
+
+      - name: Run integration test
+        working-directory: ./backend
+        run: npm run test:integration
+
+#      - name: Run e2e test
+#        working-directory: ./backend
+#        run: npm run test:e2e
+
+      - name: Shut down tests database
+        if: always()
+        working-directory: ./backend
+        run: npm run docker:test:down

@@ -13,10 +13,14 @@ import * as assert from 'assert';
 describe('createUser controller tests', () => {
   let app: INestApplication;
 
-  const mockCommandBus = createMock<CommandBus>();
+  const mockCommandBus = createMock<CommandBus>({
+    execute(command): Promise<any> {
+      return Promise.resolve(command);
+    },
+  });
 
   let isAuthentificated = true;
-  const user = { email: 'willaiam@gmail.com', name: 'Will', family_name: 'iam' };
+  const user = { email: 'willaiam@gmail.com', name: 'Will iam', family_name: 'IAM' };
   beforeEach(async () => {
     const moduleCreateUser: TestingModule = await Test.createTestingModule({
       imports: [CreateUserModule],
@@ -41,7 +45,14 @@ describe('createUser controller tests', () => {
   });
 
   it('should return CREATED if the user creation succeed', async () => {
-    return request(app.getHttpServer()).post('/user').expect(201);
+    return request(app.getHttpServer())
+      .post('/user')
+      .expect(201)
+      .then((response) => {
+        expect(response.body.email).toEqual(user.email);
+        expect(response.body.firstname).toEqual(user.name.split(' ')[0]);
+        expect(response.body.lastname).toEqual(user.family_name);
+      });
   });
 
   it('should return 403 if the user is not logged', () => {
@@ -58,7 +69,7 @@ describe('createUser controller tests', () => {
       .post('/user')
       .expect(400)
       .then((response) => {
-        assert(response.body.message, new InvalidEmail().message);
+        expect(response.body.message).toEqual(new InvalidEmail().message);
       });
   });
 
@@ -69,7 +80,7 @@ describe('createUser controller tests', () => {
       .post('/user')
       .expect(400)
       .then((response) => {
-        assert(response.body.message, new InvalidFirstname().message);
+        expect(response.body.message).toEqual(new InvalidFirstname().message);
       });
   });
 

@@ -12,13 +12,9 @@ export class CreateUserController {
 
   @Post('/user')
   async createUser(@Authenticate() user: UserInfo): Promise<boolean> {
-    try {
-      await this.commandBus.execute(new CreateUserCommand(user.email, user.name, user.family_name));
-      return;
-    } catch (e) {
-      console.log(e);
-      console.log(e.constructor.name);
+    const first_name = user.name.split(' ')[0];
+    return this.commandBus.execute(new CreateUserCommand(user.email, first_name, user.family_name)).catch((e) => {
       throw getHttpException(e);
-    }
+    });
   }
 }

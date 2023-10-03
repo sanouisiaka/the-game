@@ -5,6 +5,7 @@
     "json",
     "ts"
   ],
+  "setupFiles": ["./setup-tests.ts"],
   "rootDir": ".",
   "testRegex": ".*\\.(spec|steps)\\.ts$",
   "transform": {
