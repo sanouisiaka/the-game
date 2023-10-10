@@ -1,0 +1,29 @@
+{
+  "preset": "ts-jest",
+  "moduleFileExtensions": [
+    "ts",
+    "tsx",
+    "js",
+    "json"
+  ],
+  "rootDir": ".",
+  "testRegex": ".*\\.tests\\.ts$",
+  "transform": {
+    "^.+\\.(t|j)sx$": [
+      "ts-jest",
+      {
+        "tsconfig": "tsconfig.json",
+        "esModuleInterop": true
+      }
+    ]
+  },
+  "moduleNameMapper": {
+    "^@/(.*)$": "<rootDir>/src/$1",
+    "^uuid$": "uuid"
+  },
+  "collectCoverageFrom": [
+    "**/*.(t|j)s"
+  ],
+  "coverageDirectory": "../coverage",
+  "testEnvironment": "jsdom"
+}

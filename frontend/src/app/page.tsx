@@ -1,9 +1,10 @@
 'use client'
 
-import { signIn, useSession } from 'next-auth/react'
+import { useSession } from 'next-auth/react'
 import { redirect } from 'next/navigation'
+import Welcome from '@/components/welcome';
 
-export default function Welcome() {
+export default function Root() {
 
   const { status } = useSession();
   if (status === 'authenticated') {
@@ -11,8 +12,12 @@ export default function Welcome() {
   }
 
   return (
-    <div>
-      <button onClick={() => signIn('google')}>sign in with gooogle</button>
+    <div className="h-full flex flex-col has-background-primary">
+      <div className="flex-initial h-1/6"></div>
+      <div className="flex-auto">
+        <Welcome/>
+      </div>
+      <div className="flex-auto h-1/6"></div>
     </div>
   );
 
