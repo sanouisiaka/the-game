@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "rootDirs": ["src", "../doc"],
     "module": "commonjs",
     "declaration": true,
     "removeComments": true,

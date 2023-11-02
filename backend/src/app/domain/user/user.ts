@@ -3,10 +3,10 @@ import { InvalidLastname } from './error/invalidLastname.error';
 import { InvalidEmail } from './error/invalidEmail.error';
 
 export class User {
-  private readonly id: string;
-  private readonly email: string;
-  private readonly firstname: string;
-  private readonly lastname: string;
+  private id: string;
+  private email: string;
+  private firstname: string;
+  private lastname: string;
 
   private constructor(id: string, email: string, firstname: string, lastname: string) {
     this.id = id;

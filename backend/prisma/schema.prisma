@@ -17,3 +17,86 @@ model User {
   lastname  String
   createdAt DateTime @default(now())
 }
+
+model League {
+  id          Int     @id @default(autoincrement())
+  api_foot_id Int     @unique
+  name        String
+  country     String
+  logo        String
+  Event       Event[]
+}
+
+model Team {
+  id           Int       @id @default(autoincrement())
+  api_foot_id  Int       @unique
+  name         String
+  code         String
+  logoUrl      String
+  Home_Fixture Fixture[] @relation("home_team")
+  Away_Fixture Fixture[] @relation("away_team")
+}
+
+model Event {
+  id        String       @id @default(uuid())
+  status    Event_status @default(OPEN)
+  League    League       @relation(fields: [league_id], references: [id])
+  league_id Int
+  Fixture   Fixture?
+  Bet       Bet[]
+}
+
+model Fixture {
+  id             String   @id @default(uuid())
+  api_foot_id    Int      @unique
+  Home_team      Team     @relation("home_team", fields: [home_team_id], references: [id])
+  home_team_id   Int
+  Away_team      Team     @relation("away_team", fields: [away_team_id], references: [id])
+  away_team_id   Int
+  date           DateTime
+  home_team_goal Int
+  away_team_goal Int
+  Event          Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  eventId        String   @unique
+}
+
+model Bet {
+  id          String       @id @default(uuid())
+  api_foot_id Int          @unique
+  type        Bet_type
+  Event       Event        @relation(fields: [eventId], references: [id])
+  eventId     String
+  Winner_bet  Winner_bet[]
+}
+
+model Winner_bet {
+  id    String @id @default(uuid())
+  Bet   Bet    @relation(fields: [betId], references: [id])
+  betId String
+
+  odd    Float
+  winner Winner_option
+  status Bet_status?
+}
+
+enum Event_status {
+  OPEN
+  ONGOING
+  CLOSE
+}
+
+enum Bet_type {
+  WINNER
+}
+
+enum Winner_option {
+  HOME
+  DRAW
+  AWAY
+}
+
+enum Bet_status {
+  WIN
+  LOOSE
+  CANCEL
+}
