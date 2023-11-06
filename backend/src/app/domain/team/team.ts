@@ -30,7 +30,7 @@ export class Team {
     }
 
     if (!code) {
-      throw new MissingInformation('name');
+      throw new MissingInformation('code');
     }
 
     if (!logoUrl) {

@@ -6,10 +6,10 @@ import { DomainError } from '../../../../../src/app/domain/domain.error';
 import { createFixture, createLeague, createTeams } from '../../../utils';
 import { CreateFixtureCommand } from '../../../../../src/app/commands/usecases/createFixture/createFixtureCommand';
 import { CreateFixtureCommandHandler } from '../../../../../src/app/commands/usecases/createFixture/createFixture.command.handler';
-import { createFixtureModule } from '../../../../../src/config/modules/createFixture.module';
 import { CannotPlayAgainstHimself } from '../../../../../src/app/domain/fixture/error/CannotPlayAgainstHimself.error';
 import { TeamNotFound } from '../../../../../src/app/domain/team/error/teamNotFound.error';
 import { FixtureAlreadyExists } from '../../../../../src/app/domain/fixture/error/fixtureAlreadyExists.error';
+import { CreateFixtureModule } from '../../../../../src/config/modules/createFixture.module';
 
 const feature = loadFeature('./test/acceptance/features/commands/createFixture/createFixture.feature');
 
@@ -33,7 +33,7 @@ defineFeature(feature, (test) => {
 
   beforeAll(async () => {
     const app: TestingModule = await Test.createTestingModule({
-      imports: [createFixtureModule],
+      imports: [CreateFixtureModule],
     }).compile();
 
     createFixtureHandler = await app.resolve(CreateFixtureCommandHandler);
