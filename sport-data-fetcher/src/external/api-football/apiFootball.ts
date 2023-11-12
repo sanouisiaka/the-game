@@ -1244,7 +1244,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
          * @maxLength 4
          * @pattern YYYY
          */
-        season?: number;
+        season: number;
         /** The id of the team */
         team?: number;
         /**

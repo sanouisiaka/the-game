@@ -1,4 +1,4 @@
-import { Bet, BetType, Fixture, FixtureStatus, Team } from '../../app/domain/football.contract';
+import { Bet, BetType, Fixture, FixtureStatus, Team } from '../../app/domain/football';
 import { TeamData } from '../../external/api-football/apiFootball';
 
 export class ApiFootballMapper {

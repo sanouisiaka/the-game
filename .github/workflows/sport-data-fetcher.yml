@@ -1,0 +1,37 @@
+name: Nest Backend CI
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'sport-data-fetcher/**'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'sport-data-fetcher/**'
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js 18.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+          cache: 'npm'
+          cache-dependency-path: 'sport-data-fetcher/package-lock.json'
+
+      - name: Install app dependencies
+        working-directory: ./sport-data-fetcher
+        run: npm install
+
+      - name: Run ESLint
+        working-directory: ./sport-data-fetcher
+        run: npm run lint
+
+      - name: Run unit test
+        working-directory: ./sport-data-fetcher
+        run: npm run test:cov

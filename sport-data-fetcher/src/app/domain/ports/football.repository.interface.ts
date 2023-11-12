@@ -1,4 +1,4 @@
-import { Bet, Fixture, League, Team } from '../football.contract';
+import { Bet, Fixture, League, Team } from '../football';
 import { BetType, Bookmaker } from '../../../external/api-football/apiFootball';
 
 export interface IFootballRepository {

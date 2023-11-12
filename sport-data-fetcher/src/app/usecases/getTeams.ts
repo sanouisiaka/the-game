@@ -2,7 +2,7 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
 import { IFootballRepository } from '../domain/ports/football.repository.interface';
 import { ClientProxy } from '@nestjs/microservices';
-import { League } from '../domain/football.contract';
+import { League } from '../domain/football';
 
 @Injectable()
 export class GetTeams {

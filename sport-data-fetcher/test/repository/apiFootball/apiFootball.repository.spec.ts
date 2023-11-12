@@ -1,7 +1,7 @@
 import { ApiFootballRepository } from '../../../src/repository/apiFootball/apiFootball.repository';
 import mockAxios from '../../__mocks__/axios';
 import { apiErrorResponse, apiFootballFixturesResponse, apiFootballOddsResponse, apiFootballTeamsResponse } from '../../utils';
-import { BetType, FixtureStatus, League } from '../../../src/app/domain/football.contract';
+import { BetType, FixtureStatus, League } from '../../../src/app/domain/football';
 import { ApiResponseNotFound } from '../../../src/app/domain/errors/apirequest.error';
 import { Bookmaker } from '../../../src/external/api-football/apiFootball';
 

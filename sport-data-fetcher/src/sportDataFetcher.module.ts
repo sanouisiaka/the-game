@@ -3,10 +3,11 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
 import { IFootballRepository } from './app/domain/ports/football.repository.interface';
 import { ApiFootballRepository } from './repository/apiFootball/apiFootball.repository';
-import { GetFixtures } from './app/usecases/getIncomingFixtures';
+import { GetIncomingFixtures } from './app/usecases/getIncomingFixtures';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { GetMatchesOdds } from './app/usecases/getFixturesOdds';
+import { GetFixturesOdds } from './app/usecases/getFixturesOdds';
 import { GetTeams } from './app/usecases/getTeams';
+import { UpdateFixtures } from './app/usecases/updateFixtures';
 
 @Module({
   imports: [
@@ -27,6 +28,6 @@ import { GetTeams } from './app/usecases/getTeams';
     ]),
   ],
   controllers: [],
-  providers: [{ provide: IFootballRepository, useClass: ApiFootballRepository }, GetFixtures, GetMatchesOdds, GetTeams],
+  providers: [{ provide: IFootballRepository, useClass: ApiFootballRepository }, GetTeams, GetIncomingFixtures, UpdateFixtures, GetFixturesOdds],
 })
 export class SportDataFetcherModule {}

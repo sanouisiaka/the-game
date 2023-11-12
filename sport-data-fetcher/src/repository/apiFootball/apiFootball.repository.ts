@@ -1,7 +1,7 @@
 import { IFootballRepository } from '../../app/domain/ports/football.repository.interface';
 import { Injectable } from '@nestjs/common';
 import { Api, apiDataScheme, BetType, Bookmaker, TeamData } from '../../external/api-football/apiFootball';
-import { Bet, Fixture, League, Team } from '../../app/domain/football.contract';
+import { Bet, Fixture, League, Team } from '../../app/domain/football';
 import { AxiosResponse } from 'axios';
 import { ApiFootballMapper } from './apiFootball.mapper';
 import { ApiResponseNotFound } from '../../app/domain/errors/apirequest.error';
@@ -30,7 +30,7 @@ export class ApiFootballRepository implements IFootballRepository {
   async getIncomingFixtures(league: League): Promise<Fixture[]> {
     const from = new Date().toISOString().split('T')[0];
     return this.apiFootball.fixtures
-      .getFixtures({ league: this.leaguesId.get(league), from })
+      .getFixtures({ league: this.leaguesId.get(league), season: new Date().getFullYear(), from })
       .then((r) => this.getResponseOrReject(r))
       .then((r) => this.apiFootMapper.fixturesDataToDomain(r));
   }
@@ -39,7 +39,7 @@ export class ApiFootballRepository implements IFootballRepository {
     const dateString = new Date().toISOString().split('-')[0];
 
     return this.apiFootball.fixtures
-      .getFixtures({ league: this.leaguesId.get(league), date: dateString })
+      .getFixtures({ league: this.leaguesId.get(league), season: new Date().getFullYear(), date: dateString })
       .then((r) => this.getResponseOrReject(r))
       .then((r) => this.apiFootMapper.fixturesDataToDomain(r));
   }

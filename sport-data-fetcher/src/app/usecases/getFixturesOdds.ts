@@ -1,7 +1,7 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { IFootballRepository } from '../domain/ports/football.repository.interface';
 import { ClientProxy } from '@nestjs/microservices';
-import { League } from '../domain/football.contract';
+import { League } from '../domain/football';
 import { BetType, Bookmaker } from '../../external/api-football/apiFootball';
 import { Cron } from '@nestjs/schedule';
 
