@@ -8,7 +8,7 @@ import { ReceiveTeamCommandHandler } from '../../../../../src/app/commands/useca
 import { ReceiveTeamCommand } from '../../../../../src/app/commands/usecases/receiveTeam/receiveTeamCommand';
 import { ReceiveTeamModule } from '../../../../../src/config/modules/receiveTeam.module';
 import { CreateTeamCommand } from '../../../../../src/app/commands/usecases/createTeam/createTeamCommand';
-import { TeamAlreadyExists } from '../../../../../src/app/domain/team/error/teamAlreadyExists.error';
+import { cleanDb } from '../shared-steps';
 
 const feature = loadFeature('./test/acceptance/features/commands/receiveTeam/receiveTeam.feature');
 
@@ -18,7 +18,6 @@ defineFeature(feature, (test) => {
 
   let receiveTeamCommand: ReceiveTeamCommand;
 
-  let error;
   const mockCommandBus = createMock<CommandBus>({
     execute(command): Promise<any> {
       return Promise.resolve(command);
@@ -40,12 +39,7 @@ defineFeature(feature, (test) => {
   beforeEach(async () => {
     mockCommandBus.execute.mockClear();
 
-    const deleteFixture = prisma.fixture.deleteMany();
-    const deleteEvent = prisma.event.deleteMany();
-    const deleteTeams = prisma.team.deleteMany();
-    const deleteLeagues = prisma.league.deleteMany();
-
-    await prisma.$transaction([deleteFixture, deleteEvent, deleteTeams, deleteLeagues]);
+    await cleanDb(prisma);
   });
 
   test('Receiving a new team', ({ given, when, then }) => {
@@ -80,12 +74,11 @@ defineFeature(feature, (test) => {
 
     when(/I receive the new team (.+)/, async (teamName: string) => {
       receiveTeamCommand = new ReceiveTeamCommand(defaultTeams.find((t) => t.name === 'PSG').api_id, teamName, teamName, 'https://randomUrl.com');
-      return receiveTeamCommandHandler.execute(receiveTeamCommand).catch((e) => (error = e));
+      return receiveTeamCommandHandler.execute(receiveTeamCommand);
     });
 
     then(/the team creation is not called/, async () => {
       expect(mockCommandBus.execute).not.toHaveBeenCalled();
-      expect(error).toBeInstanceOf(TeamAlreadyExists);
     });
   });
 });

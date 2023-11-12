@@ -1,4 +1,4 @@
-import { DomainError } from '../../domain.error';
+import { DomainError } from '../../../domain.error';
 
 export class FixtureAlreadyExists extends DomainError {
   constructor(id: string) {

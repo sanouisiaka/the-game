@@ -39,7 +39,7 @@ describe('retrieveConnectedUser controller tests', () => {
     await app.close();
   });
 
-  it('should return OK if the user retrieve user exists', async () => {
+  it('should return OK if the user retrieve exists', async () => {
     const user = User.build('1', 'will@gmail.com', 'will', 'iam');
     mockQueryBus.execute.mockReturnValueOnce(Promise.resolve(user));
 
@@ -53,7 +53,7 @@ describe('retrieveConnectedUser controller tests', () => {
       });
   });
 
-  it('should return 404 if the user creation fail because the user does not exists', () => {
+  it('should return 404 if the user does not exists', () => {
     isAuthentificated = true;
     mockQueryBus.execute.mockRejectedValueOnce(new UserNotFound());
 
@@ -71,7 +71,7 @@ describe('retrieveConnectedUser controller tests', () => {
     return request(app.getHttpServer()).get('/user').expect(403);
   });
 
-  it('should return 500 if another error occured during the users creation', () => {
+  it('should return 500 if another error occured during the user retrieving', () => {
     isAuthentificated = true;
     mockQueryBus.execute.mockRejectedValueOnce('unknown exception');
     return request(app.getHttpServer()).get('/user').expect(500);

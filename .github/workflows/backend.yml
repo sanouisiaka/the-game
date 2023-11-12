@@ -34,7 +34,7 @@ jobs:
 
       - name: Prepare tests database
         working-directory: ./backend
-        run: npm run docker:test:up && npm run prisma:deploy:migration
+        run: npm run docker:test:up && npm run prisma:deploy:migration:test
 
 #      - name: Run unit test
 #        working-directory: ./backend

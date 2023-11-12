@@ -1,4 +1,4 @@
-import { Fixture } from '../domain/fixture/fixture';
+import { Fixture } from '../domain/event/fixture/fixture';
 
 export interface IFixtureRepository {
   getIdByApiFootId(apiFootId: number): Promise<string>;
@@ -8,6 +8,8 @@ export interface IFixtureRepository {
   createFixture(fixture: Fixture): Promise<Fixture>;
 
   updateFixtureInfo(fixture: Fixture): Promise<Fixture>;
+
+  updateFixtureBets(fixture: Fixture): Promise<Fixture>;
 }
 
 export const IFixtureRepository = Symbol('IFixtureRepository');

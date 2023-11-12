@@ -1,7 +1,7 @@
 import { CommandBus, CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
 import { IFixtureRepository } from '../../../ports/fixture.repository.interface';
-import { Fixture } from '../../../domain/fixture/fixture';
+import { Fixture } from '../../../domain/event/fixture/fixture';
 import { ReceiveFixtureCommand } from './receiveFixtureCommand';
 import { UpdateFixtureCommand } from '../updateFixture/updateFixtureCommand';
 import { CreateFixtureCommand } from '../createFixture/createFixtureCommand';

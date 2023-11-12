@@ -1,4 +1,4 @@
-import { MissingInformation } from '../user/error/missingInformation.error';
+import { MissingInformation } from '../../user/error/missingInformation.error';
 import { InvalidGoalNumber } from './error/invalidGoalNumber.error';
 
 export class FixtureTeam {

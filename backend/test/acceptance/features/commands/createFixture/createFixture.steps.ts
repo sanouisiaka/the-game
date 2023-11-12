@@ -6,10 +6,11 @@ import { DomainError } from '../../../../../src/app/domain/domain.error';
 import { createFixture, createLeague, createTeams } from '../../../utils';
 import { CreateFixtureCommand } from '../../../../../src/app/commands/usecases/createFixture/createFixtureCommand';
 import { CreateFixtureCommandHandler } from '../../../../../src/app/commands/usecases/createFixture/createFixture.command.handler';
-import { CannotPlayAgainstHimself } from '../../../../../src/app/domain/fixture/error/CannotPlayAgainstHimself.error';
+import { CannotPlayAgainstHimself } from '../../../../../src/app/domain/event/fixture/error/CannotPlayAgainstHimself.error';
 import { TeamNotFound } from '../../../../../src/app/domain/team/error/teamNotFound.error';
-import { FixtureAlreadyExists } from '../../../../../src/app/domain/fixture/error/fixtureAlreadyExists.error';
+import { FixtureAlreadyExists } from '../../../../../src/app/domain/event/fixture/error/fixtureAlreadyExists.error';
 import { CreateFixtureModule } from '../../../../../src/config/modules/createFixture.module';
+import { cleanDb } from '../shared-steps';
 
 const feature = loadFeature('./test/acceptance/features/commands/createFixture/createFixture.feature');
 
@@ -41,12 +42,7 @@ defineFeature(feature, (test) => {
   });
 
   beforeEach(async () => {
-    const deleteFixture = prisma.fixture.deleteMany();
-    const deleteEvent = prisma.event.deleteMany();
-    const deleteTeams = prisma.team.deleteMany();
-    const deleteLeagues = prisma.league.deleteMany();
-
-    await prisma.$transaction([deleteFixture, deleteEvent, deleteTeams, deleteLeagues]);
+    await cleanDb(prisma);
 
     await createLeague(prisma);
     await createTeams(prisma, teams);

@@ -1,4 +1,4 @@
-import { DomainError } from '../../domain.error';
+import { DomainError } from '../../../domain.error';
 
 export class InvalidGoalNumber extends DomainError {
   constructor() {

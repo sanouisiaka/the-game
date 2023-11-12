@@ -4,10 +4,12 @@ import { ConfigModule } from '@nestjs/config';
 import { IFixtureRepository } from '../../app/ports/fixture.repository.interface';
 import { FixtureRepository } from '../../repository/command/fixture.repository';
 import { PrismaService } from '../prisma.service';
-import { UpdateFixtureCommandHandler } from '../../app/commands/usecases/updateFixture/updateFixture.command.handler';
+import { ReceiveBetsController } from '../../api/usecases/receiveBets/receiveBets.controller';
+import { ReceiveBetCommandHandler } from '../../app/commands/usecases/receiveBet/receiveBet.command.handler';
 
 @Module({
   imports: [CqrsModule, ConfigModule],
-  providers: [UpdateFixtureCommandHandler, { provide: IFixtureRepository, useClass: FixtureRepository }, PrismaService],
+  controllers: [ReceiveBetsController],
+  providers: [ReceiveBetCommandHandler, { provide: IFixtureRepository, useClass: FixtureRepository }, PrismaService],
 })
-export class UpdateFixtureModule {}
+export class ReceiveBetModule {}

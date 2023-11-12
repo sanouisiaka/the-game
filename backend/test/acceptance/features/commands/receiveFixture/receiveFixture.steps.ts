@@ -9,6 +9,7 @@ import { ReceiveFixtureCommand } from '../../../../../src/app/commands/usecases/
 import { CreateFixtureCommand } from '../../../../../src/app/commands/usecases/createFixture/createFixtureCommand';
 import { UpdateFixtureCommand } from '../../../../../src/app/commands/usecases/updateFixture/updateFixtureCommand';
 import { createFixture, createLeague, createTeams, defaultTeams } from '../../../utils';
+import { cleanDb } from '../shared-steps';
 
 const feature = loadFeature('./test/acceptance/features/commands/receiveFixture/receiveFixture.feature');
 
@@ -37,12 +38,7 @@ defineFeature(feature, (test) => {
   });
 
   beforeEach(async () => {
-    const deleteFixture = prisma.fixture.deleteMany();
-    const deleteEvent = prisma.event.deleteMany();
-    const deleteTeams = prisma.team.deleteMany();
-    const deleteLeagues = prisma.league.deleteMany();
-
-    await prisma.$transaction([deleteFixture, deleteEvent, deleteTeams, deleteLeagues]);
+    await cleanDb(prisma);
 
     await createLeague(prisma);
     await createTeams(prisma, defaultTeams);

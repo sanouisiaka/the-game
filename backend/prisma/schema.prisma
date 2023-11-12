@@ -43,11 +43,12 @@ model Event {
   League    League       @relation(fields: [league_id], references: [id])
   league_id Int
   Fixture   Fixture?
-  Bet       Bet[]
+  Bets      Bet[]
 }
 
 model Fixture {
-  id             String   @id @default(uuid())
+  Event          Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  eventId        String   @id
   api_foot_id    Int      @unique
   Home_team      Team     @relation("home_team", fields: [home_team_id], references: [id])
   home_team_id   Int
@@ -56,37 +57,27 @@ model Fixture {
   date           DateTime
   home_team_goal Int
   away_team_goal Int
-  Event          Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  eventId        String   @unique
 }
 
 model Bet {
-  id          String       @id @default(uuid())
-  api_foot_id Int          @unique
-  type        Bet_type
-  Event       Event        @relation(fields: [eventId], references: [id])
-  eventId     String
-  Winner_bet  Winner_bet[]
+  id         String      @id @default(uuid())
+  Event      Event       @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  eventId    String
+  odd        Float
+  Winner_bet Winner_bet?
+  status     Bet_status?
 }
 
 model Winner_bet {
-  id    String @id @default(uuid())
-  Bet   Bet    @relation(fields: [betId], references: [id])
-  betId String
-
-  odd    Float
+  Bet    Bet           @relation(fields: [betId], references: [id], onDelete: Cascade)
+  betId  String        @id
   winner Winner_option
-  status Bet_status?
 }
 
 enum Event_status {
   OPEN
   ONGOING
   CLOSE
-}
-
-enum Bet_type {
-  WINNER
 }
 
 enum Winner_option {

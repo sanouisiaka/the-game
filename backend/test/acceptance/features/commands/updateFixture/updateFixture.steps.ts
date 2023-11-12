@@ -5,10 +5,11 @@ import { Fixture } from '@prisma/client';
 import { DomainError } from '../../../../../src/app/domain/domain.error';
 import { createFixture, createLeague, createTeams, defaultTeams } from '../../../utils';
 import { UpdateFixtureCommandHandler } from '../../../../../src/app/commands/usecases/updateFixture/updateFixture.command.handler';
-import { updateFixtureModule } from '../../../../../src/config/modules/updateFixture.module';
+import { UpdateFixtureModule } from '../../../../../src/config/modules/updateFixture.module';
 import { UpdateFixtureCommand } from '../../../../../src/app/commands/usecases/updateFixture/updateFixtureCommand';
-import { FixtureNotFound } from '../../../../../src/app/domain/fixture/error/fixtureNotFound.error';
-import { InvalidGoalNumber } from '../../../../../src/app/domain/fixture/error/invalidGoalNumber.error';
+import { FixtureNotFound } from '../../../../../src/app/domain/event/fixture/error/fixtureNotFound.error';
+import { InvalidGoalNumber } from '../../../../../src/app/domain/event/fixture/error/invalidGoalNumber.error';
+import { cleanDb } from '../shared-steps';
 
 const feature = loadFeature('./test/acceptance/features/commands/updateFixture/updateFixture.feature');
 
@@ -22,7 +23,7 @@ defineFeature(feature, (test) => {
 
   beforeAll(async () => {
     const app: TestingModule = await Test.createTestingModule({
-      imports: [updateFixtureModule],
+      imports: [UpdateFixtureModule],
     }).compile();
 
     updateFixtureHandler = await app.resolve(UpdateFixtureCommandHandler);
@@ -30,13 +31,7 @@ defineFeature(feature, (test) => {
   });
 
   beforeEach(async () => {
-    const deleteFixture = prisma.fixture.deleteMany();
-    const deleteEvent = prisma.event.deleteMany();
-    const deleteTeams = prisma.team.deleteMany();
-    const deleteLeagues = prisma.league.deleteMany();
-
-    await prisma.$transaction([deleteFixture, deleteEvent, deleteTeams, deleteLeagues]);
-
+    await cleanDb(prisma);
     await createLeague(prisma);
     await createTeams(prisma, defaultTeams);
   });
@@ -49,7 +44,7 @@ defineFeature(feature, (test) => {
 
   const givenTheFixtureExists = (given) => {
     given(/the fixture (\d+) already exist/, async (api_foot_id: string) => {
-      return createFixture(prisma, parseInt(api_foot_id)).then((result) => (createdFixtureId = result.id));
+      return createFixture(prisma, parseInt(api_foot_id)).then((result) => (createdFixtureId = result.eventId));
     });
   };
 
@@ -77,7 +72,7 @@ defineFeature(feature, (test) => {
     then(/the fixture is updated with the score (-?\d)-(-?\d)/, async (homeGoal: string, awayGoal: string) => {
       expect(handlerError).toBeUndefined();
 
-      const fixture: Fixture = await prisma.fixture.findUnique({ where: { id: createdFixtureId } });
+      const fixture: Fixture = await prisma.fixture.findUnique({ where: { eventId: createdFixtureId } });
       expect(fixture).toBeDefined();
       expect(fixture.home_team_goal).toEqual(parseInt(homeGoal));
       expect(fixture.away_team_goal).toEqual(parseInt(awayGoal));

@@ -1,6 +1,6 @@
 import { MissingInformation } from '../user/error/missingInformation.error';
 
-export class FixtureLeague {
+export class EventLeague {
   private readonly _id: number;
 
   constructor(id: number) {

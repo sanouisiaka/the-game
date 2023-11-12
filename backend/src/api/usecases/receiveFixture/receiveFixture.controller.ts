@@ -3,6 +3,7 @@ import { Controller, Logger } from '@nestjs/common';
 import { FixtureRequest } from './fixture.request';
 import { CommandBus } from '@nestjs/cqrs';
 import { ReceiveFixtureCommand } from '../../../app/commands/usecases/receiveFixture/receiveFixtureCommand';
+import { DomainError } from '../../../app/domain/domain.error';
 
 @Controller()
 export class ReceiveFixtureController {
@@ -25,6 +26,12 @@ export class ReceiveFixtureController {
       data.api_foot_league_id,
     );
 
-    return this.commandBus.execute(command);
+    await this.commandBus.execute(command).catch((e) => {
+      if (e instanceof DomainError) {
+        this.logger.error('error during fixture command processing  ' + e.constructor.name + ': ' + e.message);
+      } else {
+        this.logger.error('error during fixture command processing  ' + JSON.stringify(e));
+      }
+    });
   }
 }
