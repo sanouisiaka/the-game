@@ -4,7 +4,7 @@ import { ConfigModule } from '@nestjs/config';
 import { ReceiveFixtureController } from '../../api/usecases/receiveFixture/receiveFixture.controller';
 import { ReceiveFixtureCommandHandler } from '../../app/commands/usecases/receiveFixture/receiveFixture.command.handler';
 import { IFixtureRepository } from '../../app/ports/fixture.repository.interface';
-import { FixtureRepository } from '../../repository/command/fixture.repository';
+import { FixtureRepository } from '../../repository/fixture.repository';
 import { PrismaService } from '../prisma.service';
 
 @Module({

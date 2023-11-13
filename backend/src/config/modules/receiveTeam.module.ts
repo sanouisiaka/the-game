@@ -4,7 +4,7 @@ import { ConfigModule } from '@nestjs/config';
 import { ReceiveTeamController } from '../../api/usecases/receiveTeam/receiveTeam.controller';
 import { ReceiveTeamCommandHandler } from '../../app/commands/usecases/receiveTeam/receiveTeam.command.handler';
 import { ITeamRepository } from '../../app/ports/team.repository.interface';
-import { TeamRepository } from '../../repository/command/team.repository';
+import { TeamRepository } from '../../repository/team.repository';
 import { PrismaService } from '../prisma.service';
 
 @Module({

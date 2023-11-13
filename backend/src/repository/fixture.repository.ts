@@ -1,12 +1,12 @@
-import { Fixture } from '../../app/domain/event/fixture/fixture';
-import { FixtureTeam } from '../../app/domain/event/fixture/fixtureTeam';
-import { EventLeague } from '../../app/domain/event/eventLeague';
-import { EventStatus } from '../../app/domain/event/event.status';
+import { Fixture } from '../app/domain/event/fixture/fixture';
+import { FixtureTeam } from '../app/domain/event/fixture/fixtureTeam';
+import { EventLeague } from '../app/domain/event/eventLeague';
+import { EventStatus } from '../app/domain/event/event.status';
 import { Injectable } from '@nestjs/common';
-import { IFixtureRepository } from '../../app/ports/fixture.repository.interface';
-import { PrismaService } from '../../config/prisma.service';
-import { PrismaError } from '../Prisma.error';
-import { WinnerBet, WinningOption } from '../../app/domain/event/bet/WinnerBet';
+import { IFixtureRepository } from '../app/ports/fixture.repository.interface';
+import { PrismaService } from '../config/prisma.service';
+import { PrismaError } from './Prisma.error';
+import { WinnerBet, WinningOption } from '../app/domain/event/bet/WinnerBet';
 
 @Injectable()
 export class FixtureRepository implements IFixtureRepository {
