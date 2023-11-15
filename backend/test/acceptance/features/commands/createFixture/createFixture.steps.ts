@@ -3,7 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaService } from '../../../../../src/config/prisma.service';
 import { Fixture } from '@prisma/client';
 import { DomainError } from '../../../../../src/app/domain/domain.error';
-import { createFixture, createLeague, createTeams } from '../../../utils';
+import { createLeague, createRandomFixture, createTeams } from '../../../utils';
 import { CreateFixtureCommand } from '../../../../../src/app/commands/usecases/createFixture/createFixtureCommand';
 import { CreateFixtureCommandHandler } from '../../../../../src/app/commands/usecases/createFixture/createFixture.command.handler';
 import { CannotPlayAgainstHimself } from '../../../../../src/app/domain/event/fixture/error/CannotPlayAgainstHimself.error';
@@ -96,7 +96,7 @@ defineFeature(feature, (test) => {
 
   test('Creating a already existing fixture', ({ given, when, then }) => {
     given(/the fixture (\d+) already exist/, async (api_foot_id: string) => {
-      return createFixture(prisma, parseInt(api_foot_id));
+      return createRandomFixture(prisma, api_foot_id);
     });
 
     whenICreateTheFixture(when);

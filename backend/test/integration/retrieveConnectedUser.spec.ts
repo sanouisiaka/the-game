@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthGuard } from '../../src/api/auth.guard';
-import { ExecutionContext, INestApplication } from '@nestjs/common';
+import { ExecutionContext, INestApplication, ValidationPipe } from '@nestjs/common';
 import * as request from 'supertest';
 import { QueryBus } from '@nestjs/cqrs';
 import { createMock } from '@golevelup/ts-jest';
@@ -32,6 +32,7 @@ describe('retrieveConnectedUser controller tests', () => {
       .compile();
 
     app = moduleRetrieveConnectedUser.createNestApplication();
+    app.useGlobalPipes(new ValidationPipe());
     await app.init();
   });
 

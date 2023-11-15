@@ -3,7 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaService } from '../../../../../src/config/prisma.service';
 import { Fixture } from '@prisma/client';
 import { DomainError } from '../../../../../src/app/domain/domain.error';
-import { createFixture, createLeague, createTeams, defaultTeams } from '../../../utils';
+import { createLeague, createRandomFixture, createTeams, defaultTeams } from '../../../utils';
 import { UpdateFixtureCommandHandler } from '../../../../../src/app/commands/usecases/updateFixture/updateFixture.command.handler';
 import { UpdateFixtureModule } from '../../../../../src/config/modules/updateFixture.module';
 import { UpdateFixtureCommand } from '../../../../../src/app/commands/usecases/updateFixture/updateFixtureCommand';
@@ -44,7 +44,7 @@ defineFeature(feature, (test) => {
 
   const givenTheFixtureExists = (given) => {
     given(/the fixture (\d+) already exist/, async (api_foot_id: string) => {
-      return createFixture(prisma, parseInt(api_foot_id)).then((result) => (createdFixtureId = result.eventId));
+      return createRandomFixture(prisma, api_foot_id).then((result) => (createdFixtureId = result[0].eventId));
     });
   };
 

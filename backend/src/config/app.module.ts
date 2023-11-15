@@ -10,6 +10,8 @@ import { UpdateFixtureModule } from './modules/updateFixture.module';
 import { CreateTeamModule } from './modules/createTeam.module';
 import { UpdateWinnerBetModule } from './modules/updateWinnerBet.module';
 import { CqrsModule } from '@nestjs/cqrs';
+import { RetrieveFixturesModule } from './modules/retrieveFixtures.module';
+import { RetrieveLeaguesModule } from './modules/retrieveLeagues.module';
 
 @Module({
   imports: [
@@ -23,6 +25,8 @@ import { CqrsModule } from '@nestjs/cqrs';
     UpdateFixtureModule,
     CreateTeamModule,
     UpdateWinnerBetModule,
+    RetrieveLeaguesModule,
+    RetrieveFixturesModule,
     ConfigModule.forRoot({ isGlobal: true }),
   ],
 })

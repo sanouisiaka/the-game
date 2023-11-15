@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CreateUserModule } from '../../src/config/modules/createUser.module';
 import { AuthGuard } from '../../src/api/auth.guard';
-import { ExecutionContext, INestApplication } from '@nestjs/common';
+import { ExecutionContext, INestApplication, ValidationPipe } from '@nestjs/common';
 import * as request from 'supertest';
 import { InvalidEmail } from '../../src/app/domain/user/error/invalidEmail.error';
 import { InvalidFirstname } from '../../src/app/domain/user/error/invalidFirstname.error';
@@ -37,6 +37,7 @@ describe('createUser controller tests', () => {
       .compile();
 
     app = moduleCreateUser.createNestApplication();
+    app.useGlobalPipes(new ValidationPipe());
     await app.init();
   });
 

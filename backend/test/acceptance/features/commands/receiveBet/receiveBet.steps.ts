@@ -3,7 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaService } from '../../../../../src/config/prisma.service';
 import { createMock } from '@golevelup/ts-jest';
 import { CommandBus } from '@nestjs/cqrs';
-import { createFixture, createLeague, createTeams, defaultTeams } from '../../../utils';
+import { createLeague, createRandomFixture, createTeams, defaultTeams } from '../../../utils';
 import { cleanDb } from '../shared-steps';
 import { ReceiveBetCommandHandler } from '../../../../../src/app/commands/usecases/receiveBet/receiveBet.command.handler';
 import { ReceiveBetCommand } from '../../../../../src/app/commands/usecases/receiveBet/receiveBetCommand';
@@ -71,7 +71,7 @@ defineFeature(feature, (test) => {
 
   test('Receiving a new winner bet', ({ given, when, then }) => {
     given(/the fixture (\d+) already exist/, async (api_foot_id: string) => {
-      return createFixture(prisma, parseInt(api_foot_id));
+      return createRandomFixture(prisma, api_foot_id);
     });
 
     whenIReceiveAWinnerBet(when);
@@ -103,7 +103,7 @@ defineFeature(feature, (test) => {
 
   test('Receiving a unknown bet', ({ given, when, then }) => {
     given(/the fixture (\d+) already exist/, async (api_foot_id: string) => {
-      return createFixture(prisma, parseInt(api_foot_id));
+      return createRandomFixture(prisma, api_foot_id);
     });
 
     when(/I receive a unknown type bet for fixture (\d+)/, async (apiFootFixtureId: string) => {

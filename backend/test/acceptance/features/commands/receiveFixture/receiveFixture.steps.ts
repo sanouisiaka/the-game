@@ -8,7 +8,7 @@ import { ReceiveFixtureCommandHandler } from '../../../../../src/app/commands/us
 import { ReceiveFixtureCommand } from '../../../../../src/app/commands/usecases/receiveFixture/receiveFixtureCommand';
 import { CreateFixtureCommand } from '../../../../../src/app/commands/usecases/createFixture/createFixtureCommand';
 import { UpdateFixtureCommand } from '../../../../../src/app/commands/usecases/updateFixture/updateFixtureCommand';
-import { createFixture, createLeague, createTeams, defaultTeams } from '../../../utils';
+import { createLeague, createRandomFixture, createTeams, defaultTeams } from '../../../utils';
 import { cleanDb } from '../shared-steps';
 
 const feature = loadFeature('./test/acceptance/features/commands/receiveFixture/receiveFixture.feature');
@@ -71,7 +71,7 @@ defineFeature(feature, (test) => {
 
   test('Receiving a known fixture', ({ given, when, then }) => {
     given(/the fixture (\d+) already exist/, async (api_foot_id: string) => {
-      return createFixture(prisma, parseInt(api_foot_id));
+      return createRandomFixture(prisma, api_foot_id);
     });
 
     when(/I receive the fixture (\d*)/, async (apiFootFixtureId: string) => {

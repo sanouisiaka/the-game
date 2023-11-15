@@ -40,15 +40,15 @@ export class Fixture extends Event {
   ) {
     super(id, status, league, bets);
 
-    if (!api_foot_id) {
+    if (api_foot_id != 0 && !api_foot_id) {
       throw new MissingInformation('api_foot_id');
     }
     if (!home_team) {
-      throw new MissingInformation('api_foot_id');
+      throw new MissingInformation('home_team');
     }
 
     if (!away_team) {
-      throw new MissingInformation('api_foot_id');
+      throw new MissingInformation('away_team');
     }
 
     this._api_foot_id = api_foot_id;
@@ -95,5 +95,9 @@ export class Fixture extends Event {
 
   get away_team(): FixtureTeam {
     return this._away_team;
+  }
+
+  get winnerBets(): WinnerBet[] {
+    return this.bets.filter((b: Bet) => b instanceof WinnerBet) as WinnerBet[];
   }
 }
