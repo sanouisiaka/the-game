@@ -4,8 +4,6 @@ export interface ITeamRepository {
   getTeamByApiFootId(apiFootId: number): Promise<Team | null>;
 
   createTeam(fixture: Team): Promise<Team>;
-
-  updateTeam(fixture: Team): Promise<Team>;
 }
 
 export const ITeamRepository = Symbol('ITeamRepository');

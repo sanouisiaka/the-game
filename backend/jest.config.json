@@ -5,15 +5,23 @@
     "json",
     "ts"
   ],
-  "setupFiles": ["./setup-tests.ts"],
+  "setupFiles": [
+    "./setup-tests.ts"
+  ],
   "rootDir": ".",
   "testRegex": ".*\\.(spec|steps)\\.ts$",
   "transform": {
     "^.+\\.(t|j)s$": "ts-jest"
   },
   "collectCoverageFrom": [
-    "**/*.(t|j)s"
+    "src/**/*.(t|j)s"
   ],
-  "coverageDirectory": "../coverage",
+  "coveragePathIgnorePatterns": [
+    "node_modules",
+    "src/config",
+    "src/main.ts"
+  ],
+  "coverageDirectory": "coverage",
+  "coverageReporters": ["json", "lcov", "text", "json-summary"],
   "testEnvironment": "node"
 }

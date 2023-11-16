@@ -10,6 +10,12 @@ Feature: create a fixture
     When I want to create the fixture 21 opposing PSG and OM
     Then the fixture creation fails because there already is a fixture with the same id
 
+  Scenario: Creating a fixture on a unknown league
+    Given the fixture 21 does not exist
+    And there is no league
+    When I want to create the fixture 21 opposing PSG and OM
+    Then the fixture creation fails because the league does not exists
+
   Scenario Outline: Creating a fixture with a unknown team fails
     Given the fixture 21 does not exist
     When I want to create the fixture 21 opposing <home_team> and <away_team>

@@ -11,6 +11,7 @@ import { TeamNotFound } from '../../../../../src/app/domain/team/error/teamNotFo
 import { FixtureAlreadyExists } from '../../../../../src/app/domain/event/fixture/error/fixtureAlreadyExists.error';
 import { CreateFixtureModule } from '../../../../../src/config/modules/createFixture.module';
 import { cleanDb } from '../shared-steps';
+import { LeagueNotFound } from '../../../../../src/app/domain/league/error/leagueNotFound.error';
 
 const feature = loadFeature('./test/acceptance/features/commands/createFixture/createFixture.feature');
 
@@ -91,6 +92,22 @@ defineFeature(feature, (test) => {
 
       const fixture: Fixture = await prisma.fixture.findUnique({ where: { api_foot_id: result.api_foot_id } });
       expect(fixture).toBeDefined();
+    });
+  });
+
+  test('Creating a fixture on a unknown league', ({ given, when, then }) => {
+    givenTheFixtureDoesntExists(given);
+
+    given(/there is no league/, async () => {
+      return prisma.league.deleteMany();
+    });
+
+    whenICreateTheFixture(when);
+
+    then(/the fixture creation fails because the league does not exists/, async () => {
+      expect(handlerError).not.toBeUndefined();
+      expect(handlerError).not.toBeNull();
+      expect(handlerError).toBeInstanceOf(LeagueNotFound);
     });
   });
 

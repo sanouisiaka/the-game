@@ -34,19 +34,4 @@ export class TeamRepository implements ITeamRepository {
       })
       .then(() => team);
   }
-
-  async updateTeam(team: Team): Promise<Team> {
-    return this.prisma.team
-      .update({
-        where: { id: team.id },
-        data: {
-          id: team.id,
-          api_foot_id: team.api_foot_id,
-          code: team.code,
-          name: team.name,
-          logoUrl: team.logoUrl,
-        },
-      })
-      .then(() => team);
-  }
 }

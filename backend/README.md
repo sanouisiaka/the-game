@@ -1,8 +1,12 @@
 # BetThemAll Backend 
 
+![check-code-coverage](https://img.shields.io/badge/code--coverage-91.25%25-brightgreen)
+
+
 The backend is providing an API for frontend to fetch information. It is also listening to event to update the database accordingly.
 
-More info to come in the future. 
+More info to come in the future.
+
 ## Description
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
