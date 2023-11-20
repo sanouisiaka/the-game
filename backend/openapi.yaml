@@ -1,0 +1,309 @@
+openapi: 3.0.3
+info:
+  title: BetThemAll
+  description: BetThemAll api
+  version: 1.0.0
+  contact:
+    name: Isiaka Sanou
+    email: isiakasanou@gmail.com
+servers:
+  - url: 'http://localhost:8080/'
+tags:
+  - name: Users
+  - name: Leagues
+  - name: Fixtures
+
+security:
+  - bearerAuth: []
+
+paths:
+  /users:
+    get:
+      tags:
+        - Users
+      summary: Retrieve the connected user's information
+      operationId: getUser
+      responses:
+        200:
+          $ref: '#/components/responses/GetUserResponse'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        404:
+          $ref: '#/components/responses/NotFoundError'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      tags:
+        - Users
+      summary: Create a account on BetThemAll for a authenticated user
+      operationId: CreateUser
+      responses:
+        201:
+          $ref: '#/components/responses/GetUserResponse'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        400:
+          $ref: '#/components/responses/BadRequestError'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+  /leagues:
+    get:
+      tags:
+        - Leagues
+      summary: Retrieve all available leagues
+      operationId: GetLeagues
+      responses:
+        200:
+          $ref: '#/components/responses/GetLeaguesResponse'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        400:
+          $ref: '#/components/responses/BadRequestError'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+  /fixtures:
+    get:
+      parameters:
+        - in: query
+          name: leagueId
+          schema:
+            type: integer
+          required: true
+          description: League id of the fixtures to get
+          example: 61
+        - in: query
+          name: from
+          schema:
+            type: string
+          required: true
+          description: the date (YYYY-MM-DD) to get the fixtures from
+          example: 2023-10-01
+        - in: query
+          name: page
+          schema:
+            type: string
+          required: true
+          description: the page to get
+          example: 2
+        - in: query
+          name: size
+          schema:
+            type: string
+          required: false
+          description: the size of the page of fixtures
+          example: 15
+      tags:
+        - Fixtures
+      summary: Retrieve a paginated list of fixtures
+      operationId: GetFixtures
+      responses:
+        200:
+          $ref: '#/components/responses/GetFixturesResponse'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        400:
+          $ref: '#/components/responses/BadRequestError'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+
+
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  responses:
+    GetLeaguesResponse:
+      description: the leagues list
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetLeaguesResponse'
+    GetFixturesResponse:
+      description: a paginated list of fixtures
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetFixturesResponse'
+    GetUserResponse:
+      description: the user's information
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/responses/GetUserResponse'
+    UnauthorizedError:
+      description: Authentication information is missing or invalid
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            status: 401
+            error: UNAUTHORIZED
+            error_description: Insufficient authentication details
+    BadRequestError:
+      description: Incoming request is invalid
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            status: 400
+            error: INVALID_REQUEST
+            message: name should not be empty
+    NotFoundError:
+      description: Resource does not exist
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            status: 404
+            error: ENTITY_NOT_FOUND
+            message: User not found
+    InternalServerError:
+      description: Request handling encountered an unexpected error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            status: 500
+            error: INTERNAL_ERROR
+            message: the error occurred because you're too beautiful
+
+  schemas:
+    GetLeaguesResponse:
+      type: array
+      items:
+        $ref: '#/components/schemas/League'
+    GetFixturesResponse:
+      type: object
+      properties:
+        currentPage:
+          type: number
+          description: the current page of the list returned
+          example: 2
+        totalCount:
+          type: number
+          description: the total number of fixture corresponding the query
+        response:
+          type: array
+          items:
+            $ref: '#/components/schemas/Fixture'
+      items:
+        $ref: '#/components/schemas/League'
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          description: the uuid of the user
+          example: 40223ea4-c2af-42f7-92fb-9dcde5de61bf
+        email:
+          type: string
+          description: the user's mail
+          example: mail@gmail.com
+        firstname:
+          type: string
+          description: the user's firstname
+          example: John
+        lastname:
+          type: string
+          description: the user's lastname
+          example: Doe
+
+    League:
+      type: object
+      properties:
+        name:
+          type: string
+          description: the league's name
+          example: Ligue 1
+        country:
+          type: string
+          description: the league's main location
+          example: FR
+        logoUrl:
+          type: string
+          description: the league's logo
+          example: https://ligue1Logo.com/jpg
+
+    Fixture:
+      type: object
+      properties:
+        id:
+          type: string
+          description: the fixture uuid
+          example: 40223ea4-c2af-42f7-92fb-9dcde5de61bf
+        date:
+          type: string
+          description: the fixture start date
+          example: 2023-07-04
+        status:
+          type: string
+          description: the fixture status, started, ongoing or finished
+          example: OPEN
+        leagueId:
+          type: number
+          description: the fixture league id
+          example: 61
+        winnerBets:
+          type: array
+          items:
+            $ref: '#/components/schemas/Bet'
+        homeTeam:
+          $ref: '#/components/schemas/FixtureTeam'
+        awayTeam:
+          $ref: '#/components/schemas/FixtureTeam'
+
+    FixtureTeam:
+      type: object
+      properties:
+        id:
+          type: number
+          description: the team's id
+        goal:
+          type: number
+          description: number of goal scored by the team during the fixture
+
+    Bet:
+      type: object
+      properties:
+        id:
+          type: string
+          description: the bet uuid
+          example: 40223ea4-c2af-42f7-92fb-9dcde5de61bf
+        option:
+          type: string
+          description: the chosen bet option. Home represents a receiving team winning the match
+          example: Home
+        odd:
+          type: number
+          description: the bet odd
+          example: 1.80
+        status:
+          type: string
+          description: describe if the bet is win, canceled or loose
+          nullable: true
+          example: CLOSED
+    Error:
+      type: object
+      required:
+        - statusCode
+        - message
+        - error
+      properties:
+        statusCode:
+          type: string
+          description: the http status of the response
+        message:
+          type: string
+          description: the error description to help understanding and resolution
+        error:
+          type: string
+          description: The error general code
+
+  

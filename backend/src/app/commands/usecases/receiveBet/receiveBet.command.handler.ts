@@ -1,5 +1,5 @@
 import { CommandBus, CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { Inject } from '@nestjs/common';
+import { Inject, Logger } from '@nestjs/common';
 import { IFixtureRepository } from '../../../ports/fixture.repository.interface';
 import { Fixture } from '../../../domain/event/fixture/fixture';
 import { ReceiveBetCommand } from './receiveBetCommand';
@@ -15,7 +15,11 @@ export class ReceiveBetCommandHandler implements ICommandHandler<ReceiveBetComma
     private commandBus: CommandBus,
   ) {}
 
+  private readonly logger = new Logger(ReceiveBetCommandHandler.name);
+
   async execute(receivedBet: ReceiveBetCommand): Promise<Fixture> {
+    this.logger.log('command receive with bet for fixture api_foot_id: ' + receivedBet.api_foot_fixture_id);
+
     return this.fixtureRepository.getIdByApiFootId(receivedBet.api_foot_fixture_id).then((fixtureId) => {
       if (fixtureId) {
         let betCommand;

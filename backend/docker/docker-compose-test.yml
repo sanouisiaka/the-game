@@ -9,5 +9,10 @@ services:
       POSTGRES_DB: thegametest
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -f http://localhost:port/ || exit 1" ]
+      interval: 5s
+      timeout: 10s
+      retries: 5
     volumes:
       - ./tmp/db:/var/lib/postgresql/data

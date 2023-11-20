@@ -17,12 +17,11 @@ export class FixtureTeam {
   public updateGoal(goal: number) {
     if (!goal) {
       this._goal = 0;
-    }
-
-    if (goal < 0) {
+    } else if (goal < 0) {
       throw new InvalidGoalNumber();
+    } else {
+      this._goal = goal;
     }
-    this._goal = goal;
   }
 
   get id(): number {

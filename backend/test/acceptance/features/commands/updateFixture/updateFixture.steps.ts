@@ -72,10 +72,10 @@ defineFeature(feature, (test) => {
     then(/the fixture is updated with the score (-?\d)-(-?\d)/, async (homeGoal: string, awayGoal: string) => {
       expect(handlerError).toBeUndefined();
 
-      const fixture: Fixture = await prisma.fixture.findUnique({ where: { eventId: createdFixtureId } });
+      const fixture: Fixture | null = await prisma.fixture.findUnique({ where: { eventId: createdFixtureId } });
       expect(fixture).toBeDefined();
-      expect(fixture.home_team_goal).toEqual(parseInt(homeGoal));
-      expect(fixture.away_team_goal).toEqual(parseInt(awayGoal));
+      expect(fixture?.home_team_goal).toEqual(parseInt(homeGoal));
+      expect(fixture?.away_team_goal).toEqual(parseInt(awayGoal));
     });
   });
 

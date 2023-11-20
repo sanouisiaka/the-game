@@ -1,5 +1,5 @@
 import { CommandBus, CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { Inject } from '@nestjs/common';
+import { Inject, Logger } from '@nestjs/common';
 import { IFixtureRepository } from '../../../ports/fixture.repository.interface';
 import { Fixture } from '../../../domain/event/fixture/fixture';
 import { ReceiveFixtureCommand } from './receiveFixtureCommand';
@@ -13,7 +13,11 @@ export class ReceiveFixtureCommandHandler implements ICommandHandler<ReceiveFixt
     private commandBus: CommandBus,
   ) {}
 
+  private readonly logger = new Logger(ReceiveFixtureCommandHandler.name);
+
   async execute(command: ReceiveFixtureCommand): Promise<Fixture> {
+    this.logger.log('command receive for fixture api_foot: ' + command.api_foot_id);
+
     return this.fixtureRepository.getIdByApiFootId(command.api_foot_id).then((fixtureId) => {
       if (fixtureId) {
         const updateFixtureCommand = new UpdateFixtureCommand(

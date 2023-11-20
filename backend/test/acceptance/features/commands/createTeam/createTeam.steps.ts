@@ -26,7 +26,7 @@ defineFeature(feature, (test) => {
   let createTeamHandler: CreateTeamCommandHandler;
   let prisma: PrismaService;
 
-  let result;
+  let newTeamId: number;
   let handlerError: DomainError;
 
   beforeAll(async () => {
@@ -62,7 +62,7 @@ defineFeature(feature, (test) => {
       const command = new CreateTeamCommand(team.api_id, team.name, team.name, 'https://arandomurl.com');
       return createTeamHandler
         .execute(command)
-        .then((r) => (result = r))
+        .then((id) => (newTeamId = id))
         .catch((e) => {
           handlerError = e;
           return Promise.resolve();
@@ -78,7 +78,7 @@ defineFeature(feature, (test) => {
     then(/the team is created/, async () => {
       expect(handlerError).toBeUndefined();
 
-      const team: Team = await prisma.team.findUnique({ where: { api_foot_id: result.api_foot_id } });
+      const team: Team = await prisma.team.findUnique({ where: { id: newTeamId } });
       expect(team).toBeDefined();
     });
   });

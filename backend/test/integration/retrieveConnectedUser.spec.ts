@@ -7,13 +7,14 @@ import { createMock } from '@golevelup/ts-jest';
 import { RetrieveConnectedUserModule } from '../../src/config/modules/retrieveConnectedUser.module';
 import { UserNotFound } from '../../src/app/domain/user/error/userNotFound.error';
 import { User } from '../../src/app/domain/user/user';
+import { mockAuthUser } from './mock/mock.auth';
 
 describe('retrieveConnectedUser controller tests', () => {
   let app: INestApplication;
 
   const mockQueryBus = createMock<QueryBus>();
 
-  let isAuthentificated = true;
+  let isAuthenticated = true;
   const user = { email: 'willaiam@gmail.com', name: 'Will', family_name: 'iam' };
 
   beforeEach(async () => {
@@ -26,7 +27,7 @@ describe('retrieveConnectedUser controller tests', () => {
       .useValue({
         canActivate: (context: ExecutionContext) => {
           context.switchToHttp().getRequest().user = user;
-          return isAuthentificated;
+          return mockAuthUser(isAuthenticated);
         },
       })
       .compile();
@@ -45,7 +46,7 @@ describe('retrieveConnectedUser controller tests', () => {
     mockQueryBus.execute.mockReturnValueOnce(Promise.resolve(user));
 
     return request(app.getHttpServer())
-      .get('/user')
+      .get('/users')
       .expect(200)
       .then((response) => {
         expect(response.body.email).toEqual(user._email);
@@ -55,26 +56,26 @@ describe('retrieveConnectedUser controller tests', () => {
   });
 
   it('should return 404 if the user does not exists', () => {
-    isAuthentificated = true;
+    isAuthenticated = true;
     mockQueryBus.execute.mockRejectedValueOnce(new UserNotFound());
 
     return request(app.getHttpServer())
-      .get('/user')
+      .get('/users')
       .expect(404)
       .then((response) => {
         expect(response.body.message).toEqual(new UserNotFound().message);
       });
   });
 
-  it('should return 403 if the user is not logged', () => {
-    isAuthentificated = false;
+  it('should return 401 if the user is not logged', () => {
+    isAuthenticated = false;
 
-    return request(app.getHttpServer()).get('/user').expect(403);
+    return request(app.getHttpServer()).get('/users').expect(401);
   });
 
   it('should return 500 if another error occured during the user retrieving', () => {
-    isAuthentificated = true;
+    isAuthenticated = true;
     mockQueryBus.execute.mockRejectedValueOnce('unknown exception');
-    return request(app.getHttpServer()).get('/user').expect(500);
+    return request(app.getHttpServer()).get('/users').expect(500);
   });
 });

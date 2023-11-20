@@ -17,7 +17,7 @@ export class UpdateFixtures {
   updateFixtures() {
     Object.values(League).map((league) => {
       this.footballRepository.getTodayFixtures(league).then((fixture) => {
-        this.client.emit('FIXTURE', JSON.stringify(fixture));
+        this.client.emit('FIXTURE', fixture);
         this.logger.log('new fixture live update event emitted for league ' + league + ' : ' + JSON.stringify(fixture));
       });
     });

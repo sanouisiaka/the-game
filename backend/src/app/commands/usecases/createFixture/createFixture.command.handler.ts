@@ -1,6 +1,6 @@
 import { CreateFixtureCommand } from './createFixtureCommand';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { Inject } from '@nestjs/common';
+import { Inject, Logger } from '@nestjs/common';
 import { IFixtureRepository } from '../../../ports/fixture.repository.interface';
 import { EventStatus } from '../../../domain/event/event.status';
 import { Fixture } from '../../../domain/event/fixture/fixture';
@@ -16,14 +16,17 @@ import { League } from '../../../domain/league/league';
 import { Team } from '../../../domain/team/team';
 
 @CommandHandler(CreateFixtureCommand)
-export class CreateFixtureCommandHandler implements ICommandHandler<CreateFixtureCommand, Fixture> {
+export class CreateFixtureCommandHandler implements ICommandHandler<CreateFixtureCommand, string> {
   constructor(
     @Inject(IFixtureRepository) private readonly fixtureRepository: IFixtureRepository,
     @Inject(ITeamRepository) private readonly teamRepository: ITeamRepository,
     @Inject(ILeagueRepository) private readonly leagueRepository: ILeagueRepository,
   ) {}
 
-  async execute(command: CreateFixtureCommand): Promise<Fixture> {
+  private readonly logger = new Logger(CreateFixtureCommandHandler.name);
+
+  async execute(command: CreateFixtureCommand): Promise<string> {
+    this.logger.log('creating fixture with api_foot_d: ' + command.api_foot_id);
     if (command.home_team_api_id === command.away_team_api_id) {
       throw new CannotPlayAgainstHimself();
     }
@@ -33,19 +36,25 @@ export class CreateFixtureCommandHandler implements ICommandHandler<CreateFixtur
       } else {
         return this.leagueRepository.getLeagueByApiFootId(command.league_api_id).then((league) => {
           if (league) {
-            return this.teamRepository.getTeamByApiFootId(command.home_team_api_id).then((homeTeam) => {
-              if (homeTeam) {
-                return this.teamRepository.getTeamByApiFootId(command.away_team_api_id).then((awayTeam) => {
-                  if (awayTeam) {
-                    return this.createFixture(command, homeTeam, awayTeam, league);
-                  } else {
-                    throw new TeamNotFound(command.away_team_api_id);
-                  }
-                });
-              } else {
-                throw new TeamNotFound(command.home_team_api_id);
-              }
-            });
+            return this.teamRepository
+              .getTeamByApiFootId(command.home_team_api_id)
+              .then((homeTeam) => {
+                if (homeTeam) {
+                  return this.teamRepository.getTeamByApiFootId(command.away_team_api_id).then((awayTeam) => {
+                    if (awayTeam) {
+                      return this.createFixture(command, homeTeam, awayTeam, league);
+                    } else {
+                      throw new TeamNotFound(command.away_team_api_id);
+                    }
+                  });
+                } else {
+                  throw new TeamNotFound(command.home_team_api_id);
+                }
+              })
+              .then((id) => {
+                this.logger.log('fixture with id ' + id + 'created');
+                return id;
+              });
           } else {
             throw new LeagueNotFound(command.league_api_id);
           }

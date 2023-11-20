@@ -43,7 +43,11 @@ describe('api football repository tests', () => {
     expect(bets.length).toBe(3);
     bets.forEach((bet) => expect(bet.type).toEqual(BetType.WINNER));
     expect(bets[0].api_foot_fixture_id).toEqual(apiFootballOddsResponse.response[0].fixture.id);
-    expect(bets[0].options).toEqual(apiFootballOddsResponse.response[0].bookmakers[0].bets[0].values);
+
+    bets[0].options.forEach((option, i) => {
+      expect(option.value).toEqual(apiFootballOddsResponse.response[0].bookmakers[0].bets[0].values[i].value);
+      expect(option.odd).toEqual(parseFloat(apiFootballOddsResponse.response[0].bookmakers[0].bets[0].values[i].odd));
+    });
   });
 
   it('should reject if apiFootball returns a error', async () => {

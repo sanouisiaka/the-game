@@ -37,7 +37,7 @@ export class ApiFootballMapper {
           type: this.getBetType(bet.id),
           api_foot_fixture_id: fixtureId,
           options: bet.values.map((v) => {
-            return { value: v.value, odd: v.odd };
+            return { value: v.value, odd: parseFloat(v.odd) };
           }),
         } as Bet;
       }) as Bet[];

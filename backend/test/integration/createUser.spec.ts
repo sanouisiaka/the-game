@@ -9,6 +9,7 @@ import { InvalidLastname } from '../../src/app/domain/user/error/invalidLastname
 import { CommandBus } from '@nestjs/cqrs';
 import { createMock } from '@golevelup/ts-jest';
 import * as assert from 'assert';
+import { mockAuthUser } from './mock/mock.auth';
 
 describe('createUser controller tests', () => {
   let app: INestApplication;
@@ -19,7 +20,7 @@ describe('createUser controller tests', () => {
     },
   });
 
-  let isAuthentificated = true;
+  let isAuthenticated = true;
   const user = { email: 'willaiam@gmail.com', name: 'Will iam', family_name: 'IAM' };
   beforeEach(async () => {
     const moduleCreateUser: TestingModule = await Test.createTestingModule({
@@ -31,7 +32,7 @@ describe('createUser controller tests', () => {
       .useValue({
         canActivate: (context: ExecutionContext) => {
           context.switchToHttp().getRequest().user = user;
-          return isAuthentificated;
+          return mockAuthUser(isAuthenticated);
         },
       })
       .compile();
@@ -47,7 +48,7 @@ describe('createUser controller tests', () => {
 
   it('should return CREATED if the user creation succeed', async () => {
     return request(app.getHttpServer())
-      .post('/user')
+      .post('/users')
       .expect(201)
       .then((response) => {
         expect(response.body.email).toEqual(user.email);
@@ -56,18 +57,18 @@ describe('createUser controller tests', () => {
       });
   });
 
-  it('should return 403 if the user is not logged', () => {
-    isAuthentificated = false;
+  it('should return 401 if the user is not logged', () => {
+    isAuthenticated = false;
 
-    return request(app.getHttpServer()).post('/user').expect(403);
+    return request(app.getHttpServer()).post('/users').expect(401);
   });
 
   it('should return 400 if the user creation fail because of a wrong email', () => {
-    isAuthentificated = true;
+    isAuthenticated = true;
     mockCommandBus.execute.mockRejectedValueOnce(new InvalidEmail());
 
     return request(app.getHttpServer())
-      .post('/user')
+      .post('/users')
       .expect(400)
       .then((response) => {
         expect(response.body.message).toEqual(new InvalidEmail().message);
@@ -75,30 +76,30 @@ describe('createUser controller tests', () => {
   });
 
   it('should return 400 if the user creation fail because of a wrong firstname', () => {
-    isAuthentificated = true;
+    isAuthenticated = true;
     mockCommandBus.execute.mockRejectedValueOnce(new InvalidFirstname());
     return request(app.getHttpServer())
-      .post('/user')
+      .post('/users')
       .expect(400)
       .then((response) => {
         expect(response.body.message).toEqual(new InvalidFirstname().message);
       });
   });
 
-  it('should return 400 if the user creation fail because of a wrong firstname', () => {
-    isAuthentificated = true;
+  it('should return 400 if the user creation fail because of a wrong lastname', () => {
+    isAuthenticated = true;
     mockCommandBus.execute.mockRejectedValueOnce(new InvalidLastname());
     return request(app.getHttpServer())
-      .post('/user')
+      .post('/users')
       .expect(400)
       .then((response) => {
         assert(response.body.message, new InvalidLastname().message);
       });
   });
 
-  it('should return 500 if another error occured during the users creation', () => {
-    isAuthentificated = true;
+  it('should return 500 if another error occurred during the users creation', () => {
+    isAuthenticated = true;
     mockCommandBus.execute.mockRejectedValueOnce('unknown exception');
-    return request(app.getHttpServer()).post('/user').expect(500);
+    return request(app.getHttpServer()).post('/users').expect(500);
   });
 });

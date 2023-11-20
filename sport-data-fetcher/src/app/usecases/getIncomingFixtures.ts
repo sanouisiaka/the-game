@@ -18,7 +18,7 @@ export class GetIncomingFixtures {
     Object.values(League).map((league) => {
       this.footballRepository.getIncomingFixtures(league).then((fixtures) => {
         fixtures.forEach((fixture) => {
-          this.client.emit('FIXTURE', JSON.stringify(fixture));
+          this.client.emit('FIXTURE', fixture);
           this.logger.log('new fixture event emitted ' + JSON.stringify(fixture));
         });
       });

@@ -30,7 +30,7 @@ defineFeature(feature, (test) => {
   let createFixtureHandler: CreateFixtureCommandHandler;
   let prisma: PrismaService;
 
-  let result;
+  let newFixtureId: string;
   let handlerError: DomainError;
 
   beforeAll(async () => {
@@ -73,7 +73,7 @@ defineFeature(feature, (test) => {
         );
         return createFixtureHandler
           .execute(command)
-          .then((r) => (result = r))
+          .then((id) => (newFixtureId = id))
           .catch((e) => {
             handlerError = e;
             return Promise.resolve();
@@ -90,7 +90,7 @@ defineFeature(feature, (test) => {
     then(/the fixture is created/, async () => {
       expect(handlerError).toBeUndefined();
 
-      const fixture: Fixture = await prisma.fixture.findUnique({ where: { api_foot_id: result.api_foot_id } });
+      const fixture: Fixture = await prisma.fixture.findUnique({ where: { eventId: newFixtureId } });
       expect(fixture).toBeDefined();
     });
   });

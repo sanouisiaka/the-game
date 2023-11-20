@@ -21,7 +21,7 @@ export class TeamRepository implements ITeamRepository {
       });
   }
 
-  async createTeam(team: Team): Promise<Team> {
+  async createTeam(team: Team): Promise<number> {
     return this.prisma.team
       .create({
         data: {
@@ -32,6 +32,6 @@ export class TeamRepository implements ITeamRepository {
           logoUrl: team.logoUrl,
         },
       })
-      .then(() => team);
+      .then((r) => r.id);
   }
 }

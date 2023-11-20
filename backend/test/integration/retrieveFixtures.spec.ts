@@ -10,14 +10,15 @@ import { FixtureTeam } from '../../src/app/domain/event/fixture/fixtureTeam';
 import { EventStatus } from '../../src/app/domain/event/event.status';
 import { EventLeague } from '../../src/app/domain/event/eventLeague';
 import { Page } from '../../src/app/common/page';
-import { FixtureResponse } from '../../src/api/usecases/retrieveFixtures/fixture.response';
+import { FixtureDto } from '../../src/api/usecases/retrieveFixtures/fixture.dto';
+import { mockAuthUser } from './mock/mock.auth';
 
 describe('retrieveFixtures controller tests', () => {
   let app: INestApplication;
 
   const mockQueryBus = createMock<QueryBus>();
 
-  let isAuthentificated = true;
+  let isAuthenticated = true;
 
   const pageFixtures: Page<Fixture> = new Page(
     [
@@ -38,7 +39,7 @@ describe('retrieveFixtures controller tests', () => {
       .overrideGuard(AuthGuard)
       .useValue({
         canActivate: () => {
-          return isAuthentificated;
+          return mockAuthUser(isAuthenticated);
         },
       })
       .compile();
@@ -64,7 +65,7 @@ describe('retrieveFixtures controller tests', () => {
         expect(response.body.response).toHaveLength(3);
         expect(response.body.currentPage).toEqual(1);
         expect(response.body.totalCount).toEqual(9);
-        response.body.response.forEach((fixtureResponse: FixtureResponse, i: number) => {
+        response.body.response.forEach((fixtureResponse: FixtureDto, i: number) => {
           expect(fixtureResponse.id).toEqual(pageFixtures.data[i].id);
         });
       });
@@ -106,13 +107,13 @@ describe('retrieveFixtures controller tests', () => {
       });
   });
 
-  it('should return 403 if the user is not logged', () => {
-    isAuthentificated = false;
-    return request(app.getHttpServer()).get('/fixtures').expect(403);
+  it('should return 401 if the user is not logged', () => {
+    isAuthenticated = false;
+    return request(app.getHttpServer()).get('/fixtures').expect(401);
   });
 
   it('should return 500 if another error occurred during the user retrieving', () => {
-    isAuthentificated = true;
+    isAuthenticated = true;
     mockQueryBus.execute.mockRejectedValueOnce('unknown exception');
     return request(app.getHttpServer()).get('/fixtures').query({ leagueId: 1, from: '2022-07-04', page: 1, size: 10 }).expect(500);
   });

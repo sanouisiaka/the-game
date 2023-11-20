@@ -18,7 +18,7 @@ export class GetTeams {
     Object.values(League).map((league) => {
       this.footballRepository.getTeams(league, new Date().getFullYear()).then((teams) => {
         teams.forEach((team) => {
-          this.client.emit('TEAM', JSON.stringify(team));
+          this.client.emit('TEAM', team);
           this.logger.log('new team event emitted ' + JSON.stringify(team));
         });
       });

@@ -64,7 +64,7 @@ export class FixtureRepository implements IFixtureRepository {
     );
   }
 
-  async createFixture(fixture: Fixture): Promise<Fixture> {
+  async createFixture(fixture: Fixture): Promise<string> {
     return this.prisma.event
       .create({
         data: {
@@ -90,7 +90,7 @@ export class FixtureRepository implements IFixtureRepository {
           },
         },
       })
-      .then(() => fixture);
+      .then((r) => r.id);
   }
 
   async updateFixtureInfo(fixture: Fixture): Promise<Fixture> {

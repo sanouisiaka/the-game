@@ -15,7 +15,7 @@ export class UserRepository implements IUserRepository {
   }
 
   async getUser(): Promise<User> {
-    return this.axiosHttp.get<AxiosResponse<User>>('/user')
+    return this.axiosHttp.get<AxiosResponse<User>>('/users')
       .then(response => response.data as User)
       .catch((error: AxiosError) => {
         if (error.response?.status === 404) {

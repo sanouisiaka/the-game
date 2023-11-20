@@ -1,5 +1,5 @@
 import { CommandBus, CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { Inject } from '@nestjs/common';
+import { Inject, Logger } from '@nestjs/common';
 import { ReceiveTeamCommand } from './receiveTeamCommand';
 import { Team } from '../../../domain/team/team';
 import { ITeamRepository } from '../../../ports/team.repository.interface';
@@ -12,7 +12,11 @@ export class ReceiveTeamCommandHandler implements ICommandHandler<ReceiveTeamCom
     private commandBus: CommandBus,
   ) {}
 
+  private readonly logger = new Logger(ReceiveTeamCommandHandler.name);
+
   async execute(command: ReceiveTeamCommand): Promise<Team> {
+    this.logger.log('command receive for team api_foot: ' + command.api_foot_id);
+
     return this.teamRepository.getTeamByApiFootId(command.api_foot_id).then((fixtureId) => {
       if (!fixtureId) {
         return this.commandBus.execute(new CreateTeamCommand(command.api_foot_id, command.name, command.code, command.logoUrl));

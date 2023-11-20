@@ -7,13 +7,14 @@ import { createMock } from '@golevelup/ts-jest';
 import { RetrieveLeaguesModule } from '../../src/config/modules/retrieveLeagues.module';
 import { League } from '../../src/app/domain/league/league';
 import { LeagueDto } from '../../src/api/usecases/retrieveLeagues/league.dto';
+import { mockAuthUser } from './mock/mock.auth';
 
 describe('retrieveLeagues controller tests', () => {
   let app: INestApplication;
 
   const mockQueryBus = createMock<QueryBus>();
 
-  let isAuthentificated = true;
+  let isAuthenticated = true;
 
   const leagues = [
     League.build(1, 61, 'Ligue 1', 'FR', 'https://link.com'),
@@ -30,7 +31,7 @@ describe('retrieveLeagues controller tests', () => {
       .overrideGuard(AuthGuard)
       .useValue({
         canActivate: () => {
-          return isAuthentificated;
+          return mockAuthUser(isAuthenticated);
         },
       })
       .compile();
@@ -60,13 +61,13 @@ describe('retrieveLeagues controller tests', () => {
       });
   });
 
-  it('should return 403 if the user is not logged', () => {
-    isAuthentificated = false;
-    return request(app.getHttpServer()).get('/leagues').expect(403);
+  it('should return 401 if the user is not logged', () => {
+    isAuthenticated = false;
+    return request(app.getHttpServer()).get('/leagues').expect(401);
   });
 
   it('should return 500 if another error occured during the user retrieving', () => {
-    isAuthentificated = true;
+    isAuthenticated = true;
     mockQueryBus.execute.mockRejectedValueOnce('unknown exception');
     return request(app.getHttpServer()).get('/leagues').expect(500);
   });

@@ -1,4 +1,4 @@
-export class PageResponse<T> {
+export class PageDto<T> {
   readonly response: T[];
 
   readonly currentPage: number;

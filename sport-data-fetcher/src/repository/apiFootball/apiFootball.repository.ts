@@ -28,9 +28,12 @@ export class ApiFootballRepository implements IFootballRepository {
   }
 
   async getIncomingFixtures(league: League): Promise<Fixture[]> {
-    const from = new Date().toISOString().split('T')[0];
+    const today = new Date();
+    const from = today.toISOString().split('T')[0];
+    const timestamp = today.setFullYear(today.getFullYear() + 1);
+    const to = new Date(timestamp).toISOString().split('T')[0];
     return this.apiFootball.fixtures
-      .getFixtures({ league: this.leaguesId.get(league), season: new Date().getFullYear(), from })
+      .getFixtures({ league: this.leaguesId.get(league), season: new Date().getFullYear(), from, to })
       .then((r) => this.getResponseOrReject(r))
       .then((r) => this.apiFootMapper.fixturesDataToDomain(r));
   }

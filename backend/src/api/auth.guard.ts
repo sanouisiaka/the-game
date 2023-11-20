@@ -1,4 +1,4 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
 import { Request } from 'express';
 import { ConfigService } from '@nestjs/config';
 import { OAuth2Client } from 'google-auth-library';
@@ -11,7 +11,7 @@ export class AuthGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const token = this.extractTokenFromHeader(request);
     if (!token) {
-      return false;
+      throw new UnauthorizedException();
     }
 
     return this.verify(token)
@@ -41,7 +41,7 @@ export class AuthGuard implements CanActivate {
   }
 }
 
-export class UserInfo {
+export interface UserInfo {
   email: string;
   name: string;
   family_name: string;

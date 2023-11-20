@@ -18,7 +18,7 @@ export default function Welcome() {
         <div className="block">Ici paris sur les matchs du monde entier en depensant <span className="font-bold">0 euros</span>.</div>
         <div className="block">Grâce aux <span className="text-yellow-500 font-bold">BetCoins</span>, parie et compare tes resultats avec ceux de tes amis dans une ligue privé ou compare toi au joueur du monde entier.</div>
         <div className="block"><span className="font-bold">Récompense quotidien</span>, <span className="font-bold">défis</span>, <span className="font-bold">combiné</span>... plein de choses sont à venir sur <BetThemAll/>.</div>
-        <div className="has-text-primary font-bold" >Connecte toi et monte dans le train, l'aventure ne fait que commencer...</div>
+        <div className="has-text-primary font-bold" >Connecte toi et monte dans le train, l&apos;aventure ne fait que commencer...</div>
       </div>
 
       <div><FontAwesomeIcon icon={faArrowDown}/></div>

@@ -19,8 +19,8 @@ export class GetFixturesOdds {
     Object.values(League).map((league) => {
       this.footballRepository.getOdds(league, new Date().getFullYear(), Bookmaker.UNIBET, BetType.WINNER).then((bets) => {
         bets.forEach((bet) => {
-          this.client.emit('BET', JSON.stringify(bet));
-          this.logger.log('new BET event emitted ' + JSON.stringify(bet));
+          this.client.emit('BETS', bet);
+          this.logger.log('new BETS event emitted ' + JSON.stringify(bet));
         });
       });
     });

@@ -1,4 +1,4 @@
-export class FixtureResponse {
+export class FixtureDto {
   id: string;
   date: string;
   status: string;

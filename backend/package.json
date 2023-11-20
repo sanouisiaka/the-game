@@ -23,8 +23,8 @@
     "test:integration": "jest --testPathPattern=spec\\.ts$",
     "test:acceptance": "jest --testPathPattern=steps\\.ts$ --runInBand",
     "test:e2e": "jest --config jest-e2e.json",
-    "test": "jest",
-    "test:watch": "jest --watch",
+    "test": "jest --runInBand",
+    "test:watch": "jest --runInBand --watch",
     "test:cov": "jest --runInBand --coverage",
     "check:cov": "npx check-total --min 80 && update-badge",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand"
