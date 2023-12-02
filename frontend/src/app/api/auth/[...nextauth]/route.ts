@@ -1,4 +1,4 @@
-import NextAuth, { SessionStrategy } from 'next-auth'
+import NextAuth from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
 import { googleRepository } from '@/rest/google.repository'
 
@@ -12,7 +12,7 @@ export const authOptions = {
     })
   ],
   session: {
-    strategy: 'jwt' as SessionStrategy,
+    strategy: 'jwt',
   },
   callbacks: {
     async session({ session, token }:any) {
@@ -37,7 +37,7 @@ export const authOptions = {
             token.id_token = res.data.id_token;
             token.expires_at = Math.floor(Date.now() / 1000 + res.data.expires_in);
           })
-          .catch((err) => console.log("ERR IN REFRESHING TOKEN"));
+          .catch(() => console.log("ERR IN REFRESHING TOKEN"));
 
       }
 

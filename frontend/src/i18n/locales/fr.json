@@ -1,5 +1,6 @@
 {
   "title": "je suis en francais",
+  "hello": "Bonjour {{ firstname }} !",
   "welcome": {
     "description": "Bienvenue sur BetTheamAll. Ici paris sur les matchs du monde entier "
   }

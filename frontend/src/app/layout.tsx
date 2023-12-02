@@ -22,7 +22,7 @@ export default async function RootLayout({ children }: {
   const session = await getServerSession(authOptions)
 
   return (
-    <html lang="en" className="h-screen min-w-full">
+    <html lang="en" className="h-screen min-w-full overflow-hidden">
       <body className="w-full h-full">
         <script src="https://accounts.google.com/gsi/client" async></script>
         <ClientProvider session={session}>
