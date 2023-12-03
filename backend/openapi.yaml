@@ -265,9 +265,23 @@ components:
         id:
           type: number
           description: the team's id
+          example: 1
+        name:
+          type: string
+          description: the team's name
+          example: Paris-Saint-Germain
+        code:
+          type: string
+          description: the team's short name
+          example: PSG
+        logoUrl:
+          type: string
+          description: a png link of the team's logo
+          example: https://alinktologo.png
         goal:
           type: number
           description: number of goal scored by the team during the fixture
+          example: 3
 
     Bet:
       type: object

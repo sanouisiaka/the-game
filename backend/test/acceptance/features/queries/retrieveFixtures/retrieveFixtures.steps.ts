@@ -6,8 +6,8 @@ import { RetrieveFixturesQueryHandler } from '../../../../../src/app/queries/use
 import { createFixtures, createLeague, createTeams, defaultLigues, defaultTeams } from '../../../utils';
 import { RetrieveFixturesQuery } from '../../../../../src/app/queries/usecases/retrieveFixtures/retrieveFixturesQuery';
 import { RetrieveFixturesModule } from '../../../../../src/config/modules/retrieveFixtures.module';
-import { Page } from '../../../../../src/app/common/page';
-import { Fixture } from '../../../../../src/app/domain/event/fixture/fixture';
+import { Page } from '../../../../../src/app/queries/page';
+import { FixtureDto } from '../../../../../src/app/queries/dto/fixture';
 
 const feature = loadFeature('./test/acceptance/features/queries/retrieveFixtures/retrieveFixtures.feature');
 
@@ -15,7 +15,7 @@ defineFeature(feature, (test) => {
   let retrieveFixturesQueryHandler: RetrieveFixturesQueryHandler;
   let prisma: PrismaService;
 
-  let result: Page<Fixture>;
+  let result: Page<FixtureDto>;
   let paginationSize: number;
   let pageNumber: number;
 
@@ -44,17 +44,27 @@ defineFeature(feature, (test) => {
 
   const thenThisListOfFixtureIsReturned = (then) => {
     then(/a sorted list of fixtures is returned/, (fixturesItem: FixtureItem[]) => {
-      const expectedLigueId = defaultLigues.find((l) => l.name === fixturesItem[0].league).id;
+      const expectedLeagueId = defaultLigues.find((l) => l.name === fixturesItem[0].league).id;
       expect(result).not.toBeUndefined();
       expect(result.meta.page).toEqual(pageNumber);
       expect(result.data.length).toBeLessThanOrEqual(paginationSize);
 
-      result.data.forEach((fixtureResult: Fixture, i: number) => {
-        prisma.team.findFirst({ where: { name: fixturesItem[i].homeTeam } }).then((t) => expect(fixtureResult.home_team.id === t.id));
-        prisma.team.findFirst({ where: { name: fixturesItem[i].awayTeam } }).then((t) => expect(fixtureResult.away_team.id === t.id));
+      result.data.forEach((fixtureResult: FixtureDto, i: number) => {
+        prisma.team.findFirst({ where: { name: fixturesItem[i].homeTeam } }).then((t) => {
+          expect(fixtureResult.homeTeam.id === t.id);
+          expect(fixtureResult.homeTeam.name === t.name);
+          expect(fixtureResult.homeTeam.logoUrl === t.logoUrl);
+          expect(fixtureResult.homeTeam.goal === 0);
+        });
+        prisma.team.findFirst({ where: { name: fixturesItem[i].awayTeam } }).then((t) => {
+          expect(fixtureResult.awayTeam.id === t.id);
+          expect(fixtureResult.awayTeam.name === t.name);
+          expect(fixtureResult.awayTeam.logoUrl === t.logoUrl);
+          expect(fixtureResult.awayTeam.goal === 0);
+        });
 
         expect(fixtureResult.date).toEqual(new Date(fixturesItem[i].date));
-        expect(fixtureResult.league.id).toEqual(expectedLigueId);
+        expect(fixtureResult.leagueId).toEqual(expectedLeagueId);
       });
     });
   };

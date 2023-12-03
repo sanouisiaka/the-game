@@ -2,12 +2,13 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AuthGuard } from '../../src/api/auth.guard';
 import { ExecutionContext, INestApplication, ValidationPipe } from '@nestjs/common';
 import * as request from 'supertest';
-import { QueryBus } from '@nestjs/cqrs';
+import { CqrsModule, QueryBus } from '@nestjs/cqrs';
 import { createMock } from '@golevelup/ts-jest';
-import { RetrieveConnectedUserModule } from '../../src/config/modules/retrieveConnectedUser.module';
 import { UserNotFound } from '../../src/app/domain/user/error/userNotFound.error';
 import { User } from '../../src/app/domain/user/user';
 import { mockAuthUser } from './mock/mock.auth';
+import { ConfigModule } from '@nestjs/config';
+import { RetrieveConnectedUserController } from '../../src/api/usecases/retrieveConnectedUser/retrieveConnectedUser.controller';
 
 describe('retrieveConnectedUser controller tests', () => {
   let app: INestApplication;
@@ -19,7 +20,8 @@ describe('retrieveConnectedUser controller tests', () => {
 
   beforeEach(async () => {
     const moduleRetrieveConnectedUser: TestingModule = await Test.createTestingModule({
-      imports: [RetrieveConnectedUserModule],
+      imports: [CqrsModule, ConfigModule],
+      controllers: [RetrieveConnectedUserController],
     })
       .overrideProvider(QueryBus)
       .useValue(mockQueryBus)

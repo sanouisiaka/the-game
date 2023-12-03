@@ -2,12 +2,13 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AuthGuard } from '../../src/api/auth.guard';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import * as request from 'supertest';
-import { QueryBus } from '@nestjs/cqrs';
+import { CqrsModule, QueryBus } from '@nestjs/cqrs';
 import { createMock } from '@golevelup/ts-jest';
-import { RetrieveLeaguesModule } from '../../src/config/modules/retrieveLeagues.module';
 import { League } from '../../src/app/domain/league/league';
 import { LeagueDto } from '../../src/api/usecases/retrieveLeagues/league.dto';
 import { mockAuthUser } from './mock/mock.auth';
+import { ConfigModule } from '@nestjs/config';
+import { RetrieveLeaguesController } from '../../src/api/usecases/retrieveLeagues/retrieveLeagues.controller';
 
 describe('retrieveLeagues controller tests', () => {
   let app: INestApplication;
@@ -24,7 +25,8 @@ describe('retrieveLeagues controller tests', () => {
 
   beforeEach(async () => {
     const moduleRetrieveLeagues: TestingModule = await Test.createTestingModule({
-      imports: [RetrieveLeaguesModule],
+      imports: [CqrsModule, ConfigModule],
+      controllers: [RetrieveLeaguesController],
     })
       .overrideProvider(QueryBus)
       .useValue(mockQueryBus)
@@ -54,6 +56,7 @@ describe('retrieveLeagues controller tests', () => {
       .then((response) => {
         expect(response.body).toHaveLength(3);
         response.body.forEach((leagueResponse: LeagueDto, i: number) => {
+          expect(leagueResponse.id).toEqual(leagues[i].id);
           expect(leagueResponse.name).toEqual(leagues[i].name);
           expect(leagueResponse.country).toEqual(leagues[i].country);
           expect(leagueResponse.logoUrl).toEqual(leagues[i].logoUrl);

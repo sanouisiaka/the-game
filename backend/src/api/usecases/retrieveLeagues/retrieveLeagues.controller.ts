@@ -15,7 +15,7 @@ export class RetrieveLeaguesController {
   async getLeagues(): Promise<LeagueDto[]> {
     return this.queryBus
       .execute(new RetrieveLeaguesQuery())
-      .then((leagues: League[]) => leagues.map((league) => new LeagueDto(league.name, league.country, league.logoUrl)))
+      .then((leagues: League[]) => leagues.map((league) => new LeagueDto(league.id, league.name, league.country, league.logoUrl)))
       .catch((e) => {
         throw getHttpException(e);
       });

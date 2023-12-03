@@ -1,15 +1,16 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { CreateUserModule } from '../../src/config/modules/createUser.module';
 import { AuthGuard } from '../../src/api/auth.guard';
 import { ExecutionContext, INestApplication, ValidationPipe } from '@nestjs/common';
 import * as request from 'supertest';
 import { InvalidEmail } from '../../src/app/domain/user/error/invalidEmail.error';
 import { InvalidFirstname } from '../../src/app/domain/user/error/invalidFirstname.error';
 import { InvalidLastname } from '../../src/app/domain/user/error/invalidLastname.error';
-import { CommandBus } from '@nestjs/cqrs';
+import { CommandBus, CqrsModule } from '@nestjs/cqrs';
 import { createMock } from '@golevelup/ts-jest';
 import * as assert from 'assert';
 import { mockAuthUser } from './mock/mock.auth';
+import { ConfigModule } from '@nestjs/config';
+import { CreateUserController } from '../../src/api/usecases/createUser/createUser.controller';
 
 describe('createUser controller tests', () => {
   let app: INestApplication;
@@ -24,7 +25,8 @@ describe('createUser controller tests', () => {
   const user = { email: 'willaiam@gmail.com', name: 'Will iam', family_name: 'IAM' };
   beforeEach(async () => {
     const moduleCreateUser: TestingModule = await Test.createTestingModule({
-      imports: [CreateUserModule],
+      imports: [CqrsModule, ConfigModule],
+      controllers: [CreateUserController],
     })
       .overrideProvider(CommandBus)
       .useValue(mockCommandBus)

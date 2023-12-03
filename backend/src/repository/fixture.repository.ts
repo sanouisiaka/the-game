@@ -6,7 +6,6 @@ import { Injectable } from '@nestjs/common';
 import { IFixtureRepository } from '../app/ports/fixture.repository.interface';
 import { PrismaService } from '../config/prisma.service';
 import { WinnerBet, WinningOption } from '../app/domain/event/bet/WinnerBet';
-import { Page } from '../app/common/page';
 
 @Injectable()
 export class FixtureRepository implements IFixtureRepository {
@@ -25,27 +24,6 @@ export class FixtureRepository implements IFixtureRepository {
         }
         return null;
       });
-  }
-
-  async getIncomingFixtures(leagueId: number, from: Date, page: number, size: number): Promise<Page<Fixture>> {
-    const where = {
-      Event: {
-        league_id: leagueId,
-      },
-      date: { gte: from },
-    };
-    const totalQuery = this.prisma.fixture.count({ where });
-    const fixturesQuery = this.prisma.fixture.findMany({
-      include: { Event: { include: { Bets: { include: { Winner_bet: true } } } } },
-      orderBy: { date: 'asc' },
-      where,
-      skip: size * page,
-      take: size,
-    });
-
-    const [total, fixturesDb] = await this.prisma.$transaction([totalQuery, fixturesQuery]);
-    const fixtures = fixturesDb.map((fixtureDb) => this.fromDb(fixtureDb));
-    return new Page<Fixture>(fixtures, page, total);
   }
 
   private fromDb(fixtureDb): Fixture {
