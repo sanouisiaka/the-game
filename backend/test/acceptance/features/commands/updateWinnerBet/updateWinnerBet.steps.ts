@@ -72,17 +72,20 @@ defineFeature(feature, (test) => {
       async (homeOdd: string, drawOdd: string, awayOdd: string) => {
         expect(handlerError).toBeUndefined();
 
-        const homeBet = await prisma.bet.findFirst({ where: { eventId: createdFixtureId, Winner_bet: { winner: 'HOME' } } });
+        const homeBet = await prisma.bet.findMany({ where: { eventId: createdFixtureId, Winner_bet: { winner: 'HOME' } } });
         expect(homeBet).toBeDefined();
-        expect(homeBet.odd).toEqual(parseFloat(homeOdd));
+        expect(homeBet.length).toEqual(1);
+        expect(homeBet[0].odd).toEqual(parseFloat(homeOdd));
 
-        const drawBet = await prisma.bet.findFirst({ where: { eventId: createdFixtureId, Winner_bet: { winner: 'DRAW' } } });
+        const drawBet = await prisma.bet.findMany({ where: { eventId: createdFixtureId, Winner_bet: { winner: 'DRAW' } } });
         expect(drawBet).toBeDefined();
-        expect(drawBet.odd).toEqual(parseFloat(drawOdd));
+        expect(drawBet.length).toEqual(1);
+        expect(drawBet[0].odd).toEqual(parseFloat(drawOdd));
 
-        const awayBet = await prisma.bet.findFirst({ where: { eventId: createdFixtureId, Winner_bet: { winner: 'AWAY' } } });
+        const awayBet = await prisma.bet.findMany({ where: { eventId: createdFixtureId, Winner_bet: { winner: 'AWAY' } } });
         expect(awayBet).toBeDefined();
-        expect(awayBet.odd).toEqual(parseFloat(awayOdd));
+        expect(awayBet.length).toEqual(1);
+        expect(awayBet[0].odd).toEqual(parseFloat(awayOdd));
       },
     );
   };

@@ -36,7 +36,7 @@ export abstract class Event {
       const winnerBets = bets.filter((b) => b instanceof WinnerBet);
       const distinctBet = new Set(winnerBets.map((b: WinnerBet) => b.option));
       if (distinctBet.size !== winnerBets.length) {
-        throw new MultipleWinnerBet();
+        throw new MultipleWinnerBet(this._id, winnerBets);
       }
     }
   }

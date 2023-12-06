@@ -39,6 +39,7 @@ describe('retrieveFixtures controller tests', () => {
       },
     ],
     1,
+    4,
     9,
   );
 
@@ -77,6 +78,7 @@ describe('retrieveFixtures controller tests', () => {
       .then((response) => {
         expect(response.body.response).toHaveLength(2);
         expect(response.body.currentPage).toEqual(1);
+        expect(response.body.totalPage).toEqual(4);
         expect(response.body.totalCount).toEqual(9);
         response.body.response.forEach((fixtureResponse, i: number) => {
           expect(fixtureResponse.id).toEqual(pageFixtures.data[i].id);
@@ -86,15 +88,15 @@ describe('retrieveFixtures controller tests', () => {
       });
   });
 
-  it('should return bad request if leagueId is missing', async () => {
+  it('should return bad request if leagueId is not a number', async () => {
     mockQueryBus.execute.mockReturnValueOnce(Promise.resolve(pageFixtures));
 
     return request(app.getHttpServer())
       .get('/fixtures')
-      .query({ from: '2022-07-04', page: 1, size: 10 })
+      .query({ from: '2022-07-04', page: 'e1', size: 10 })
       .expect(400)
       .then((response) => {
-        expect(response.body.message[0]).toEqual('leagueId should not be empty');
+        expect(response.body.message[0]).toEqual('leagueId must be an integer number');
       });
   });
 
@@ -110,15 +112,27 @@ describe('retrieveFixtures controller tests', () => {
       });
   });
 
-  it('should return bad request if page is missing', async () => {
+  it('should return bad request if page is not a number', async () => {
     mockQueryBus.execute.mockReturnValueOnce(Promise.resolve(pageFixtures));
 
     return request(app.getHttpServer())
       .get('/fixtures')
-      .query({ leagueId: 1, from: '2022-07-04', size: 10 })
+      .query({ leagueId: 1, from: '2022-07-04', page: '-', size: '10' })
       .expect(400)
       .then((response) => {
-        expect(response.body.message[0]).toEqual('page should not be empty');
+        expect(response.body.message[0]).toEqual('page must be an integer number');
+      });
+  });
+
+  it('should return bad request if size is not a number', async () => {
+    mockQueryBus.execute.mockReturnValueOnce(Promise.resolve(pageFixtures));
+
+    return request(app.getHttpServer())
+      .get('/fixtures')
+      .query({ leagueId: 1, from: '2022-07-04', page: '1', size: 'dix' })
+      .expect(400)
+      .then((response) => {
+        expect(response.body.message[0]).toEqual('size must be an integer number');
       });
   });
 

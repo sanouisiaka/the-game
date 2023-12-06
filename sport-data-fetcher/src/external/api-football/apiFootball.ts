@@ -673,6 +673,10 @@ export interface GetOddsData {
   parameters?: {
     field?: string;
   }[];
+  paging?: {
+    current: number;
+    total: number;
+  }
   errors?: {
     field?: string;
   }[];

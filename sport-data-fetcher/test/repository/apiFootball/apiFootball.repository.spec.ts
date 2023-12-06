@@ -1,6 +1,12 @@
 import { ApiFootballRepository } from '../../../src/repository/apiFootball/apiFootball.repository';
 import mockAxios from '../../__mocks__/axios';
-import { apiErrorResponse, apiFootballFixturesResponse, apiFootballOddsResponse, apiFootballTeamsResponse } from '../../utils';
+import {
+  apiErrorResponse,
+  apiFootballFixturesResponse,
+  apiFootballOddsResponse,
+  apiFootballPaginatedResponse,
+  apiFootballTeamsResponse,
+} from '../../utils';
 import { BetType, FixtureStatus, League } from '../../../src/app/domain/football';
 import { ApiResponseNotFound } from '../../../src/app/domain/errors/apirequest.error';
 import { Bookmaker } from '../../../src/external/api-football/apiFootball';
@@ -48,6 +54,16 @@ describe('api football repository tests', () => {
       expect(option.value).toEqual(apiFootballOddsResponse.response[0].bookmakers[0].bets[0].values[i].value);
       expect(option.odd).toEqual(parseFloat(apiFootballOddsResponse.response[0].bookmakers[0].bets[0].values[i].odd));
     });
+  });
+
+  it('should call api multiple times if paginated', async () => {
+    mockAxios.request.mockImplementationOnce(() => Promise.resolve(apiFootballPaginatedResponse(1, 3)));
+    mockAxios.request.mockImplementationOnce(() => Promise.resolve(apiFootballPaginatedResponse(2, 3)));
+    mockAxios.request.mockImplementationOnce(() => Promise.resolve(apiFootballPaginatedResponse(3, 3)));
+
+    await apiFootballRepository.getOdds(League.LIGUE1, 2023, Bookmaker.UNIBET, 1);
+
+    expect(mockAxios.request).toHaveBeenCalledTimes(3);
   });
 
   it('should reject if apiFootball returns a error', async () => {

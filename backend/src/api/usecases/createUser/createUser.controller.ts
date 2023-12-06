@@ -13,8 +13,9 @@ export class CreateUserController {
 
   @Post('/users')
   async createUser(@Authenticate() user: UserInfo): Promise<User> {
-    const first_name = user.name.split(' ')[0];
-    return this.commandBus.execute(new CreateUserCommand(user.email, first_name, user.family_name)).catch((e) => {
+    const first_name = user?.name ? user?.name.split(' ')[0] : 'John';
+    const name = user?.family_name ? user?.family_name : 'Doe';
+    return this.commandBus.execute(new CreateUserCommand(user.email, first_name, name)).catch((e) => {
       throw getHttpException(e);
     });
   }

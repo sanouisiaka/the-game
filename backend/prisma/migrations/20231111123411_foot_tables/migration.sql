@@ -95,3 +95,10 @@ ALTER TABLE "Bet" ADD CONSTRAINT "Bet_eventId_fkey" FOREIGN KEY ("eventId") REFE
 
 -- AddForeignKey
 ALTER TABLE "Winner_bet" ADD CONSTRAINT "Winner_bet_betId_fkey" FOREIGN KEY ("betId") REFERENCES "Bet"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+
+INSERT INTO "League" (id, api_foot_id, name, country, logo) VALUES (1, 39, 'Premier League', 'England', 'https://media-4.api-sports.io/football/leagues/39.png');
+INSERT INTO "League" (id, api_foot_id, name, country, logo) VALUES (2, 140, 'La Liga', 'Spain', 'https://media-4.api-sports.io/football/leagues/140.png');
+INSERT INTO "League" (id, api_foot_id, name, country, logo) VALUES (3, 78, 'Bundesliga', 'Germany', 'https://media-4.api-sports.io/football/leagues/78.png');
+INSERT INTO "League" (id, api_foot_id, name, country, logo) VALUES (4, 135, 'Serie A', 'Italie', 'https://media-4.api-sports.io/football/leagues/135.png');
+INSERT INTO "League" (id, api_foot_id, name, country, logo) VALUES (5, 61, 'Ligue 1', 'France', 'https://media-4.api-sports.io/football/leagues/61.png');

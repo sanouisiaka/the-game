@@ -19,7 +19,7 @@ export class CreateTeamCommandHandler implements ICommandHandler<CreateTeamComma
         throw new TeamAlreadyExists(team.api_foot_id);
       } else {
         return this.teamRepository.createTeam(Team.newTeam(command.api_foot_id, command.name, command.code, command.logoUrl)).then((id) => {
-          this.logger.log('team with id ' + id + 'created');
+          this.logger.log('team with id ' + id + ' created');
           return id;
         });
       }

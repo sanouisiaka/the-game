@@ -52,7 +52,7 @@ export class CreateFixtureCommandHandler implements ICommandHandler<CreateFixtur
                 }
               })
               .then((id) => {
-                this.logger.log('fixture with id ' + id + 'created');
+                this.logger.log('fixture with id ' + id + ' created');
                 return id;
               });
           } else {

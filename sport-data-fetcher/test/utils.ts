@@ -301,3 +301,15 @@ export const apiFootballOddsResponse = {
     },
   ],
 };
+
+export function apiFootballPaginatedResponse(current: number, total: number) {
+  return {
+    data: {
+      paging: {
+        current: current,
+        total: total,
+      },
+      response: [],
+    },
+  };
+}

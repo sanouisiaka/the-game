@@ -16,9 +16,11 @@ export class UpdateFixtures {
   @Cron('0 * * * *') // every hour
   updateFixtures() {
     Object.values(League).map((league) => {
-      this.footballRepository.getTodayFixtures(league).then((fixture) => {
-        this.client.emit('FIXTURE', fixture);
-        this.logger.log('new fixture live update event emitted for league ' + league + ' : ' + JSON.stringify(fixture));
+      this.footballRepository.getTodayFixtures(league).then((fixtures) => {
+        fixtures.forEach((fixture) => {
+          this.client.emit('FIXTURE', fixture);
+          this.logger.log('new fixture live update event emitted for league ' + league + ' : ' + JSON.stringify(fixture));
+        });
       });
     });
   }

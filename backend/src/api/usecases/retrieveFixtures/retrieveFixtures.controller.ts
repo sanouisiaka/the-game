@@ -1,4 +1,4 @@
-import { Controller, Get, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Logger, Query, UseGuards, ValidationPipe } from '@nestjs/common';
 import { QueryBus } from '@nestjs/cqrs';
 import { getHttpException } from '../../DomainToHttpException';
 import { AuthGuard } from '../../auth.guard';
@@ -13,12 +13,17 @@ import { PageDto } from './page.dto';
 export class RetrieveFixturesController {
   constructor(private queryBus: QueryBus) {}
 
+  private readonly logger = new Logger(RetrieveFixturesController.name);
+
   @Get('/fixtures')
-  async getFixtures(@Query() queryParams: FixtureQuery): Promise<PageDto<FixtureDto>> {
+  async getFixtures(@Query(new ValidationPipe({ transform: true })) queryParams: FixtureQuery): Promise<PageDto<FixtureDto>> {
+    this.logger.log('new request GET /fixtures: \n' + JSON.stringify(queryParams));
+
     return this.queryBus
       .execute(new RetrieveFixturesQuery(queryParams.leagueId, queryParams.from, queryParams.page, queryParams.size))
-      .then((page: Page<FixtureDto>) => new PageDto(page.data, page.meta.page, page.meta.total))
+      .then((page: Page<FixtureDto>) => new PageDto(page.data, page.meta.page, page.meta.totalPage, page.meta.total))
       .catch((e) => {
+        this.logger.error(e);
         throw getHttpException(e);
       });
   }

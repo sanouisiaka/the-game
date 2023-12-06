@@ -30,7 +30,7 @@ export class ApiFootballMapper {
 
   oddsDataToDomain(oddsData: any[]): Bet[] {
     return oddsData.flatMap((data) => {
-      const fixtureId = data.fixture.id;
+      const fixtureId = parseInt(data.fixture.id);
       // we are taking only the first bookmakers odd for now
       return data.bookmakers[0].bets.map((bet) => {
         return {

@@ -1,14 +1,21 @@
-import { IsNotEmpty } from 'class-validator';
+import { IsInt, IsNotEmpty, IsOptional } from 'class-validator';
+import { Transform } from 'class-transformer';
 
 export class FixtureQuery {
-  @IsNotEmpty()
+  @IsInt()
+  @Transform((t) => parseInt(t.value))
   leagueId: number;
 
   @IsNotEmpty()
+  @Transform((t) => new Date(t.value))
   from: Date;
 
-  @IsNotEmpty()
+  @IsInt()
+  @Transform((t) => parseInt(t.value))
   page: number;
 
+  @IsOptional()
+  @IsInt()
+  @Transform((t) => parseInt(t.value))
   size: number;
 }

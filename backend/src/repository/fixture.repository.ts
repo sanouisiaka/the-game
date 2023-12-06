@@ -52,12 +52,12 @@ export class FixtureRepository implements IFixtureRepository {
             create: {
               date: fixture.date,
               api_foot_id: fixture.api_foot_id,
-              Away_team: {
+              Home_team: {
                 connect: {
                   id: fixture.home_team.id,
                 },
               },
-              Home_team: {
+              Away_team: {
                 connect: {
                   id: fixture.away_team.id,
                 },

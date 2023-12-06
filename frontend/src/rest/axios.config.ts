@@ -2,7 +2,7 @@ import axios, { Axios, AxiosRequestConfig } from 'axios';
 import { getSession } from 'next-auth/react'
 
 export interface HttpClient {
-  get<T>(uri: string): Promise<T>;
+  get<T>(uri: string, params?: object): Promise<T>;
 
   post<T = any, D = any, U = any>(uri: string, data?: D, header?: U): Promise<T>;
 
@@ -32,8 +32,8 @@ export class AxiosInstance implements HttpClient {
   }
 
 
-  get<T>(uri: string): Promise<T> {
-    return this.instance.get(uri)
+  get<T>(uri: string, params?: object): Promise<T> {
+    return this.instance.get(uri, {params})
   }
 
   post<T, D, U>(uri: string, data?: D, header?: U): Promise<T> {

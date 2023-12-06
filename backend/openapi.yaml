@@ -186,6 +186,9 @@ components:
           type: number
           description: the current page of the list returned
           example: 2
+        totalPage:
+          type: number
+          description: the total number of page corresponding the query
         totalCount:
           type: number
           description: the total number of fixture corresponding the query

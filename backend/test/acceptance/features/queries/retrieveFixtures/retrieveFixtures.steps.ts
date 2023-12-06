@@ -49,19 +49,10 @@ defineFeature(feature, (test) => {
       expect(result.meta.page).toEqual(pageNumber);
       expect(result.data.length).toBeLessThanOrEqual(paginationSize);
 
+      console.log(JSON.stringify(result));
       result.data.forEach((fixtureResult: FixtureDto, i: number) => {
-        prisma.team.findFirst({ where: { name: fixturesItem[i].homeTeam } }).then((t) => {
-          expect(fixtureResult.homeTeam.id === t.id);
-          expect(fixtureResult.homeTeam.name === t.name);
-          expect(fixtureResult.homeTeam.logoUrl === t.logoUrl);
-          expect(fixtureResult.homeTeam.goal === 0);
-        });
-        prisma.team.findFirst({ where: { name: fixturesItem[i].awayTeam } }).then((t) => {
-          expect(fixtureResult.awayTeam.id === t.id);
-          expect(fixtureResult.awayTeam.name === t.name);
-          expect(fixtureResult.awayTeam.logoUrl === t.logoUrl);
-          expect(fixtureResult.awayTeam.goal === 0);
-        });
+        expect(fixtureResult.homeTeam.name).toEqual(fixturesItem[i].homeTeam);
+        expect(fixtureResult.awayTeam.name).toEqual(fixturesItem[i].awayTeam);
 
         expect(fixtureResult.date).toEqual(new Date(fixturesItem[i].date));
         expect(fixtureResult.leagueId).toEqual(expectedLeagueId);

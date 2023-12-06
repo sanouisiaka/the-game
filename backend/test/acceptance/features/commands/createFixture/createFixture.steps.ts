@@ -1,7 +1,6 @@
 import { defineFeature, loadFeature } from 'jest-cucumber';
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaService } from '../../../../../src/config/prisma.service';
-import { Fixture } from '@prisma/client';
 import { DomainError } from '../../../../../src/app/domain/domain.error';
 import { createLeague, createRandomFixture, createTeams } from '../../../utils';
 import { CreateFixtureCommand } from '../../../../../src/app/commands/usecases/createFixture/createFixtureCommand';
@@ -33,6 +32,9 @@ defineFeature(feature, (test) => {
   let newFixtureId: string;
   let handlerError: DomainError;
 
+  let homeTeam;
+  let awayTeam;
+
   beforeAll(async () => {
     const app: TestingModule = await Test.createTestingModule({
       imports: [CreateFixtureModule],
@@ -59,8 +61,8 @@ defineFeature(feature, (test) => {
     when(
       /I want to create the fixture (\d*) opposing (.*) and (.*)/,
       async (apiFootFixtureId: string, homeTeamName: string, awayTeamName: string) => {
-        const homeTeam = teams.find((t) => t.name === homeTeamName);
-        const awayTeam = teams.find((t) => t.name === awayTeamName);
+        homeTeam = teams.find((t) => t.name === homeTeamName);
+        awayTeam = teams.find((t) => t.name === awayTeamName);
         const command = new CreateFixtureCommand(
           parseInt(apiFootFixtureId),
           homeTeam ? homeTeam.api_id : 999,
@@ -90,8 +92,13 @@ defineFeature(feature, (test) => {
     then(/the fixture is created/, async () => {
       expect(handlerError).toBeUndefined();
 
-      const fixture: Fixture = await prisma.fixture.findUnique({ where: { eventId: newFixtureId } });
+      const fixture = await prisma.fixture.findUnique({
+        where: { eventId: newFixtureId },
+        include: { Home_team: true, Away_team: true },
+      });
       expect(fixture).toBeDefined();
+      expect(fixture.Home_team.api_foot_id).toEqual(homeTeam.api_id);
+      expect(fixture.Away_team.api_foot_id).toEqual(awayTeam.api_id);
     });
   });
 

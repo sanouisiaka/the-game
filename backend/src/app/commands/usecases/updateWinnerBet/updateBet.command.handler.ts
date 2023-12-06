@@ -21,7 +21,7 @@ export class UpdateWinnerBetCommandHandler implements ICommandHandler<UpdateWinn
         fixture.updateWinnerBet(WinningOption.DRAW, command.drawOdd);
         fixture.updateWinnerBet(WinningOption.AWAY, command.awayOdd);
         return this.fixtureRepository.updateFixtureBets(fixture).then((f) => {
-          this.logger.log('winner bet for fixture ' + command.fixtureId + 'updated');
+          this.logger.log('winner bet for fixture ' + command.fixtureId + 'updated with: ' + JSON.stringify(fixture.winnerBets));
           return f;
         });
       } else {

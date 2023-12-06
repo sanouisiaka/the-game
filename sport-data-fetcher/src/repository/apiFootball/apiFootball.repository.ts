@@ -48,10 +48,25 @@ export class ApiFootballRepository implements IFootballRepository {
   }
 
   async getOdds(league: League, season: number, bookmaker: Bookmaker, bet: BetType): Promise<Bet[]> {
-    return this.apiFootball.odds
-      .getOdds({ league: this.leaguesId.get(league), season, bookmaker, bet })
-      .then((r) => this.getResponseOrReject(r))
-      .then((r) => this.apiFootMapper.oddsDataToDomain(r));
+    const bets: Bet[] = [];
+    let page = 0;
+    let totalPage: number;
+    do {
+      page++;
+      const b = await this.apiFootball.odds
+        .getOdds({ league: this.leaguesId.get(league), season, bookmaker, bet, page })
+        .then((r) => {
+          page = r?.data?.paging?.current;
+          totalPage = r?.data?.paging?.total;
+          return r;
+        })
+        .then((r) => this.getResponseOrReject(r))
+        .then((r) => this.apiFootMapper.oddsDataToDomain(r));
+
+      bets.push(...b);
+    } while (page && totalPage && page < totalPage);
+
+    return bets;
   }
 
   private getResponseOrReject<T = any>(axiosResponse: AxiosResponse<apiDataScheme>): Promise<T> {
