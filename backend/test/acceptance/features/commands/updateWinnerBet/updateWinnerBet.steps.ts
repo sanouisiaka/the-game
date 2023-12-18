@@ -4,7 +4,7 @@ import { PrismaService } from '../../../../../src/config/prisma.service';
 import { DomainError } from '../../../../../src/app/domain/domain.error';
 import { createLeague, createRandomFixture, createTeams, defaultTeams } from '../../../utils';
 import { FixtureNotFound } from '../../../../../src/app/domain/event/fixture/error/fixtureNotFound.error';
-import { UpdateWinnerBetCommandHandler } from '../../../../../src/app/commands/usecases/updateWinnerBet/updateBet.command.handler';
+import { UpdateWinnerBetCommandHandler } from '../../../../../src/app/commands/usecases/updateWinnerBet/updateWinnerBet.command.handler';
 import { UpdateWinnerBetModule } from '../../../../../src/config/modules/updateWinnerBet.module';
 import { cleanDb } from '../shared-steps';
 import { UpdateWinnerBetCommand } from '../../../../../src/app/commands/usecases/updateWinnerBet/updateWinnerBetCommand';

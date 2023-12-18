@@ -14,14 +14,14 @@ export class UpdateWinnerBetCommandHandler implements ICommandHandler<UpdateWinn
 
   async execute(command: UpdateWinnerBetCommand): Promise<Fixture> {
     this.logger.log('updating winner bet fixture : ' + command.fixtureId);
-
-    return this.fixtureRepository.getFixture(command.fixtureId).then((fixture) => {
+    return this.fixtureRepository.getFixture(command.fixtureId).then(async (fixture) => {
       if (fixture) {
         fixture.updateWinnerBet(WinningOption.HOME, command.homeOdd);
         fixture.updateWinnerBet(WinningOption.DRAW, command.drawOdd);
         fixture.updateWinnerBet(WinningOption.AWAY, command.awayOdd);
         return this.fixtureRepository.updateFixtureBets(fixture).then((f) => {
           this.logger.log('winner bet for fixture ' + command.fixtureId + 'updated with: ' + JSON.stringify(fixture.winnerBets));
+
           return f;
         });
       } else {

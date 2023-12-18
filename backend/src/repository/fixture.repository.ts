@@ -6,6 +6,8 @@ import { Injectable } from '@nestjs/common';
 import { IFixtureRepository } from '../app/ports/fixture.repository.interface';
 import { PrismaService } from '../config/prisma.service';
 import { WinnerBet, WinningOption } from '../app/domain/event/bet/WinnerBet';
+import { Bet } from '../app/domain/event/bet/bet';
+import { ConcurrencyError } from './error/concurrency.error';
 
 @Injectable()
 export class FixtureRepository implements IFixtureRepository {
@@ -32,6 +34,7 @@ export class FixtureRepository implements IFixtureRepository {
     );
     return Fixture.build(
       fixtureDb.Event.id,
+      fixtureDb.Event.version,
       fixtureDb.api_foot_id,
       fixtureDb.date,
       new FixtureTeam(fixtureDb.home_team_id, fixtureDb.home_team_goal),
@@ -90,27 +93,75 @@ export class FixtureRepository implements IFixtureRepository {
   }
 
   async updateFixtureBets(fixture: Fixture): Promise<Fixture> {
-    const betUpdates = fixture.bets
-      .filter((b) => b.id)
-      .map((b) =>
-        this.prisma.bet.update({
-          where: { id: b.id },
-          data: {
-            odd: b.odd,
-            status: b.status,
+    console.log('fixture: ' + JSON.stringify(fixture));
+    return this.prisma.$transaction(async (tx) => {
+      const betsToUpdate: Bet[] = fixture.bets.filter((b) => b.id);
+
+      for (const b of betsToUpdate) {
+        try {
+          await tx.bet.update({
+            where: {
+              id: b.id,
+              Event: {
+                id: fixture.id,
+                version: fixture.version,
+              },
+            },
+            data: {
+              odd: b.odd,
+              status: b.status,
+            },
+          });
+        } catch (e) {
+          throw new ConcurrencyError('The fixture has been update during a bet update');
+        }
+      }
+
+      const betsToAdd = fixture.bets
+        .filter((b) => !b.id)
+        .filter((b) => b instanceof WinnerBet)
+        .map((b) => b as WinnerBet);
+
+      for (const b of betsToAdd) {
+        try {
+          await tx.bet.create({
+            data: {
+              Event: {
+                connect: {
+                  id: fixture.id,
+                  version: fixture.version,
+                },
+              },
+              odd: b.odd,
+              status: b.status,
+              Winner_bet: {
+                create: { winner: b.option },
+              },
+            },
+          });
+        } catch (e) {
+          throw new ConcurrencyError('The fixture has been update during a bet update');
+        }
+      }
+
+      try {
+        await tx.event.update({
+          where: {
+            id: fixture.id,
+            version: fixture.version,
           },
-        }),
-      );
+          data: {
+            version: {
+              increment: 1,
+            },
+          },
+        });
+      } catch (e) {
+        console.log(e);
+        throw new ConcurrencyError('The fixture has been update during a bet addition');
+      }
 
-    const newWinnerBets = fixture.bets
-      .filter((b) => !b.id)
-      .filter((b) => b instanceof WinnerBet)
-      .map((b: WinnerBet) =>
-        this.prisma.bet.create({
-          data: { eventId: fixture.id, odd: b.odd, status: b.status, Winner_bet: { create: { winner: b.option } } },
-        }),
-      );
-
-    return this.prisma.$transaction([...betUpdates, ...newWinnerBets]).then(() => fixture);
+      return fixture;
+    });
   }
 }

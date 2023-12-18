@@ -44,6 +44,7 @@ model Event {
   league_id Int
   Fixture   Fixture?
   Bets      Bet[]
+  version   Int @default(1)
 }
 
 model Fixture {

@@ -7,6 +7,7 @@ import { MultipleWinnerBet } from './bet/error/multipleWinnerBet.error';
 
 export abstract class Event {
   private readonly _id: string;
+  private readonly _version: number;
   private _status: EventStatus;
   private _league: EventLeague;
   private _bets: Bet[];
@@ -15,7 +16,7 @@ export abstract class Event {
     this._status = status;
   }
 
-  protected constructor(id: string, status: EventStatus, league: EventLeague, bets: Bet[]) {
+  protected constructor(id: string, version: number, status: EventStatus, league: EventLeague, bets: Bet[]) {
     if (!status) {
       throw new MissingInformation('event status');
     }
@@ -26,6 +27,7 @@ export abstract class Event {
     this.validateBets(bets);
 
     this._id = id;
+    this._version = version;
     this._status = status;
     this._league = league;
     this._bets = bets;
@@ -43,6 +45,10 @@ export abstract class Event {
 
   get id(): string {
     return this._id;
+  }
+
+  get version(): number {
+    return this._version;
   }
 
   get status(): EventStatus {

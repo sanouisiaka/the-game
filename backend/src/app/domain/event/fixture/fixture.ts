@@ -30,6 +30,7 @@ export class Fixture extends Event {
 
   private constructor(
     id: string,
+    version: number,
     api_foot_id: number,
     date: Date,
     home_team: FixtureTeam,
@@ -38,7 +39,7 @@ export class Fixture extends Event {
     league: EventLeague,
     bets: Bet[],
   ) {
-    super(id, status, league, bets);
+    super(id, version, status, league, bets);
 
     if (api_foot_id != 0 && !api_foot_id) {
       throw new MissingInformation('api_foot_id');
@@ -59,6 +60,7 @@ export class Fixture extends Event {
 
   public static build(
     id: string,
+    version: number,
     api_foot_id: number,
     date: Date,
     home_team: FixtureTeam,
@@ -67,7 +69,7 @@ export class Fixture extends Event {
     league: EventLeague,
     bets: Bet[],
   ): Fixture {
-    return new Fixture(id, api_foot_id, date, home_team, away_team, status, league, bets);
+    return new Fixture(id, version, api_foot_id, date, home_team, away_team, status, league, bets);
   }
 
   public static newFixture(
@@ -78,7 +80,7 @@ export class Fixture extends Event {
     status: EventStatus,
     league: EventLeague,
   ): Fixture {
-    return new Fixture(undefined, api_foot_id, date, home_team, away_team, status, league, []);
+    return new Fixture(undefined, 1, api_foot_id, date, home_team, away_team, status, league, []);
   }
 
   get api_foot_id(): number {
