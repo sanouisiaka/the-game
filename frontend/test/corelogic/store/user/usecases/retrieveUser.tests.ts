@@ -1,5 +1,5 @@
 import { getConnectedUser, retrieveConnectedUserStatus, retrieveUserThunk } from '@/corelogic/store/user/user.store'
-import { User } from '@/corelogic/domain/user'
+import { User } from '@/corelogic/domain/user/user'
 import { store } from '@/store'
 import { AXIOS_HTTP_CLIENT, HttpClient } from '@/rest/axios.config'
 import { container } from '@/di'

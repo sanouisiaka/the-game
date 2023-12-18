@@ -1,6 +1,13 @@
 {
   "title": "je suis en francais",
   "hello": "Bonjour {{ firstname }} !",
+  "fixture": {
+   "incoming": "A venir"
+  },
+  "bet": {
+    "last": "Mes derniers paris"
+  },
+  "ranking": "classement",
   "welcome": {
     "description": "Bienvenue sur BetTheamAll. Ici paris sur les matchs du monde entier "
   }

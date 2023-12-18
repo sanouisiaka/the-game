@@ -1,14 +1,14 @@
-'use client'
+'use client';
 
-import { useSession } from 'next-auth/react'
-import { redirect } from 'next/navigation'
+import { useSession } from 'next-auth/react';
+import { redirect } from 'next/navigation';
 import Welcome from '@/components/welcome';
 
 export default function Root() {
 
   const { status } = useSession();
   if (status === 'authenticated') {
-    redirect('/home')
+    redirect('/home');
   }
 
   return (

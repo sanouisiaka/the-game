@@ -1,25 +1,35 @@
 import Box from "@/components/elements/box";
+import BetSelector from '@/components/betSelector';
+import UserInfo from '@/components/elements/userInfo';
+import { useTranslation } from '@/i18n/client';
 
 export default function Bento() {
+  const { t } = useTranslation();
+
   return (
-    <div className="h-full grid grid-cols-5 grid-rows-4 gap-3 p-2">
-      <div className="row-start-1 row-span-3 col-start-1 col-span-2">
-        <Box/>
+    <div className="md:h-full md:grid md:grid-cols-5 md:grid-rows-4 md:gap-3 p-2">
+      <div className="md:row-start-1 md:row-span-3 md:col-start-1 md:col-span-2">
+        <Box title={t('fixture.incoming')}>
+          <BetSelector/>
+        </Box>
       </div>
-      <div className="row-start-1 col-start-3">
-        <Box/>
+      <div className="md:row-start-1 md:col-start-3">
+        <Box title={undefined}>
+          <UserInfo/>
+        </Box>
       </div>
-      <div className="row-start-1 col-start-4">
-        <Box/>
+      <div className="md:row-start-1 md:col-start-4">
+        <Box title={t('bet.last')}/>
       </div>
-      <div className="row-start-2 row-span-2 col-start-3 col-span-2">
-        <Box/>
+      <div className="md:row-start-2 md:row-span-2 md:col-start-3 md:col-span-2">
+        <Box title={t('fixture.incoming')}>
+        </Box>
       </div>
-      <div className="col-start-5 row-span-4">
-        <Box/>
+      <div className="md:col-start-5 md:row-span-4">
+        <Box title='BET'/>
       </div>
-      <div className="row-start-4 col-span-4 col-start-1">
-        <Box/>
+      <div className="md:row-start-4 md:col-span-4 md:col-start-1">
+        <Box title={t('ranking')}/>
       </div>
     </div>
   );

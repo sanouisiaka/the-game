@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { User } from '@/corelogic/domain/user'
+import { User } from '@/corelogic/domain/user/user'
 import { retrieveUser } from '@/corelogic/store/user/usecases/retrieveUser'
 import { RootState } from '@/store'
 import { Status } from '@/types/fetch.types'

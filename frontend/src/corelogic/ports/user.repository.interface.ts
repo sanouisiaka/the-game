@@ -1,4 +1,4 @@
-import { User } from '@/corelogic/domain/user'
+import { User } from '@/corelogic/domain/user/user'
 
 export interface IUserRepository {
   getUser(): Promise<User>;

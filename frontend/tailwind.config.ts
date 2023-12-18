@@ -12,6 +12,20 @@ const config: Config = {
       colors: {
         primary: 'rgb(var(--color-primary) / <alpha-value>)',
         secondary: 'rgb(var(--color-secondary) / <alpha-value>)',
+        'sunset': {
+          '50': '#fff4ed',
+          '100': '#ffe6d4',
+          '200': '#ffc9a8',
+          '300': '#ffa370',
+          '400': '#ff7137',
+          '500': '#ff4305',
+          '600': '#f03006',
+          '700': '#c72007',
+          '800': '#9e1b0e',
+          '900': '#7f1a0f',
+          '950': '#450905',
+        },
+
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',

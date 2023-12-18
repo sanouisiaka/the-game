@@ -1,7 +1,7 @@
 import { IUserRepository, USER_REPOSITORY } from '@/corelogic/ports/user.repository.interface'
 import { DomainError } from '@/corelogic/domain/errors/domain.error'
-import { UserNotFoundError } from '@/corelogic/domain/errors/userNotFound.error'
-import { User } from '@/corelogic/domain/user'
+import { UserNotFoundError } from '@/corelogic/domain/user/errors/userNotFound.error'
+import { User } from '@/corelogic/domain/user/user'
 import { container } from '@/di'
 
 export async function retrieveUser(): Promise<User> {
