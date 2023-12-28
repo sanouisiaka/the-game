@@ -2,12 +2,18 @@
   "title": "je suis en francais",
   "hello": "Bonjour {{ firstname }} !",
   "fixture": {
-   "incoming": "A venir"
+   "incoming": "Matches à venir"
   },
   "bet": {
-    "last": "Mes derniers paris"
+    "bet": "Mise",
+    "last": "Mes derniers paris",
+    "addBetToStart": "Bet sur un match pour créer un ticket !",
+    "potentialGain": "Gain potentiel",
+    "totalPotentialGain": "Gain potentiel total",
+    "parlayOdd": "Côte total"
   },
-  "ranking": "classement",
+  "submit": "Valider",
+  "ranking": "Classement",
   "welcome": {
     "description": "Bienvenue sur BetTheamAll. Ici paris sur les matchs du monde entier "
   }

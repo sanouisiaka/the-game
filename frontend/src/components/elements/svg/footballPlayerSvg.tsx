@@ -1,7 +1,7 @@
 export default function FootballPlayerSvg() {
 
   return (
-    <svg height='100%' width='100%' version='1.1' id='Layer_1' xmlns='http://www.w3.org/2000/svg'
+    <svg height='100%' version='1.1' id='Layer_1' xmlns='http://www.w3.org/2000/svg'
          viewBox='0 0 480 480'>
       <g>
         <g>

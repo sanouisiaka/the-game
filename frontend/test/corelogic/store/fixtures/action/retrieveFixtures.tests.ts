@@ -14,41 +14,11 @@ import {
 } from '@/corelogic/store/fixtures/fixtures.store';
 import { GetPaginatedFixturesParam } from '@/corelogic/ports/fixture.repository.interface';
 import { Page } from '@/corelogic/domain/page';
+import { randomFixtures } from '../../../../utils/utils';
 
 
 const httpMock = new HttpClientMocked();
 
-const fixtures = [{
-  id: 'afeu-1553-77811',
-  leagueId: 21,
-  date: '1996/07/04',
-  status: 'OPEN',
-  homeTeam: {
-    id: 7,
-    goal: 3,
-    name: 'Paris Saint-Germain',
-    code: 'PSG',
-    logoUrl: 'https://url.com',
-  },
-  awayTeam: {
-    id: 69,
-    goal: 0,
-    name: 'Olympique de Marseille',
-    code: 'OM',
-    logoUrl: 'https://url.com',
-  },
-  winnerBets: [
-    {
-      winOption: 'HOME',
-      id: '2432',
-      odd: 1.23,
-    },
-    {
-      winOption: 'AWAY',
-      id: '20032',
-      odd: 14.23,
-    }],
-}] as Fixture[];
 
 beforeEach(() => {
   container.register<HttpClient>(AXIOS_HTTP_CLIENT, { useValue: httpMock });
@@ -73,7 +43,7 @@ test('should return the initial state', () => {
 test('should retrieve fixtures', async () => {
   // Given
   httpMock.get.mockResolvedValueOnce(
-    { data: { elements: fixtures, currentPage: 2, totalPage: 4, totalCount: 9, response: [] } as Page<Fixture> },
+    { data: { currentPage: 2, totalPage: 4, totalCount: 9, response: randomFixtures } as Page<Fixture> },
   );
 
   // When
@@ -82,15 +52,15 @@ test('should retrieve fixtures', async () => {
   // Then
   const fixturesResult = getFixtures(store.getState());
 
-  expect(fixturesResult.length).toEqual(1);
-  expect(fixturesResult).toEqual(fixtures);
+  expect(fixturesResult.length).toEqual(2);
+  expect(fixturesResult).toEqual(randomFixtures);
 
   expect(getNbrOfFixtures(store.getState())).toEqual(9);
   expect(getFixturesCurrentPage(store.getState())).toEqual(2);
   expect(getFixturesTotalPages(store.getState())).toEqual(4);
   expect(isRetrievingPaginatedFixtures(store.getState())).toBeFalsy();
-  expect(getFixture('afeu-1553-77811')).toBeDefined();
-  expect(getFixture('1234')).toBeUndefined();
+  expect(getFixture('afeu-1553-77811')(store.getState())?.id).toBeDefined();
+  expect(getFixture('1234')(store.getState())).toBeUndefined();
 
 
 });

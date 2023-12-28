@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { RootState } from '@/store';
 import { Fixture } from '@/corelogic/domain/fixture/fixture';
 import { GetPaginatedFixturesParam } from '@/corelogic/ports/fixture.repository.interface';
-import { retrievePaginatedFixtures } from '@/corelogic/store/fixtures/usecases/retrieveFixtures';
+import { retrievePaginatedFixtures } from '@/corelogic/store/fixtures/action/retrieveFixtures';
 
 
 const initialState = {

@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { getLeagues } from '@/corelogic/store/leagues/leagues.store';
 import { getFixtures, isRetrievingPaginatedFixtures, retrievePaginatedFixturesThunk } from '@/corelogic/store/fixtures/fixtures.store';
 import Fixture from '@/components/elements/fixture';
+import LoadingSpinnerSvg from '@/components/elements/svg/loadingSpinnerSvg';
 
 export default function BetSelector() {
 
@@ -25,7 +26,7 @@ export default function BetSelector() {
   const leaguesList = leagues.map(league =>
     <button key={league.id} onClick={() => handleLeagueClick(league.id)}
             className={
-              `text-sm text-white font-semibold rounded-full px-2 py-1 mx-2
+              `mx-6 my-1 text-sm text-white font-semibold rounded-full px-2 py-1 md:mx-2 md:my-0
               ${selectedLeagueId === league.id ? 'bg-sunset-600 border border-sunset-900' : 'bg-sunset-200'} hover:bg-sunset-400`
             }>
       {league.name}
@@ -41,10 +42,13 @@ export default function BetSelector() {
       <div
         className='overflow-x-auto flex-none flex flex-col md:flex-row items-stretch whitespace-nowrap justify-between mx-5'>{leaguesList}</div>
 
-      {
-        loading ? <div>charge</div>
-          : <div className='grow overflow-y-auto m-2'>{fixturesList}</div>
-      }
+      <div className='grow overflow-y-auto m-2'>
+        {
+          loading ? <div className="h-full flex"><div className="m-auto h-8 w-8"><LoadingSpinnerSvg/></div></div>
+            : fixturesList
+        }
+      </div>
+
     </div>
   );
 }

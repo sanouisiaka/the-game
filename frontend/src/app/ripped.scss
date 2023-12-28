@@ -1,0 +1,45 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+$ripped-height: 1rem;
+$paper-color: theme('colors.neutral.100');
+
+.ripped-paper {
+  position: relative;
+
+  &:before,
+  &:after {
+    content: '';
+    display: block;
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: $ripped-height;
+    background: linear-gradient(45deg,
+            transparent 33.333%,
+            $paper-color 33.333%,
+            $paper-color 66.667%,
+            transparent 66.667%
+    ),
+    linear-gradient(-45deg,
+                    transparent 33.333%,
+                    $paper-color 33.333%,
+                    $paper-color 66.667%,
+                    transparent 66.667%
+    );
+    background-size: $ripped-height ($ripped-height * 2);
+    background-position: 0 0;
+  }
+
+  &:before {
+    top: -$ripped-height;
+    background-position: 0 0;
+  }
+
+  &:after {
+    bottom: -$ripped-height;
+    background-position: 0 (-$ripped-height);
+  }
+
+}

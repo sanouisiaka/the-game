@@ -13,7 +13,7 @@ export default function Home() {
   dispatch(retrieveLeaguesThunk());
 
   return (
-    <div className="h-full flex flex-col bg-zinc-100">
+    <div className="h-full flex flex-col bg-neutral-50">
       <div className="h-1/6">
         <Header/>
       </div>

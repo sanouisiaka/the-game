@@ -39,9 +39,9 @@ test('should retrieve leagues', async () => {
   expect(currentState.length).toEqual(2);
   expect(currentState).toEqual(leagues);
 
-  expect(getLeague(1)).toBeDefined();
-  expect(getLeague(2)).toBeDefined();
-  expect(getLeague(3)).toBeUndefined();
+  expect(getLeague(1)(store.getState())).toBeDefined();
+  expect(getLeague(2)(store.getState())).toBeDefined();
+  expect(getLeague(3)(store.getState())).toBeUndefined();
 
 });
 

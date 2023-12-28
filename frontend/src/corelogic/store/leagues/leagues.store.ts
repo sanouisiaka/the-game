@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { RootState } from '@/store';
 import { League } from '@/corelogic/domain/league/league';
-import { retrieveLeagues } from '@/corelogic/store/leagues/usecases/retrieveLeagues';
+import { retrieveLeagues } from '@/corelogic/store/leagues/action/retrieveLeagues';
 
 
 const initialState = {
