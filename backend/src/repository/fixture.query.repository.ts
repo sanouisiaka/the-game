@@ -8,12 +8,12 @@ import { FixtureDto, FixtureDtoTeam, FixtureDtoWinnerBet } from '../app/queries/
 export class FixtureQueryRepository implements IFixtureQueryRepository {
   constructor(private prisma: PrismaService) {}
 
-  async getIncomingFixtures(leagueId: number, from: Date, page: number, size: number): Promise<Page<FixtureDto>> {
+  async getIncomingFixtures(leagueId: number, before: Date, after: Date, page: number, size: number): Promise<Page<FixtureDto>> {
     const where = {
       Event: {
         league_id: leagueId,
       },
-      date: { gte: from },
+      date: { gte: after, lt: before },
     };
     const totalQuery = this.prisma.fixture.count({ where });
     const fixturesQuery = this.prisma.fixture.findMany({
@@ -22,7 +22,7 @@ export class FixtureQueryRepository implements IFixtureQueryRepository {
         Home_team: true,
         Away_team: true,
       },
-      orderBy: { date: 'asc' },
+      orderBy: { date: after ? 'asc' : 'desc' },
       where,
       skip: size * page,
       take: size,

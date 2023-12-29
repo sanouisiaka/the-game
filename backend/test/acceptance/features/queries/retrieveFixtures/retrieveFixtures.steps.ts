@@ -32,12 +32,21 @@ defineFeature(feature, (test) => {
     paginationSize = undefined;
   });
 
-  const whenIRetrievePage = (when) => {
-    when(/I retrieve the page (\d) of (.*)'s fixtures after (.*)/, (page: number, ligue: string, date: string) => {
+  const whenIRetrieveFixtureAfter = (when) => {
+    when(/I retrieve the page (\d) of (.*)'s fixtures after (.*)/, (page: number, ligue: string, after: string) => {
       pageNumber = page - 1;
       const ligueId = defaultLigues.find((l) => l.name === ligue).id;
       return retrieveFixturesQueryHandler
-        .execute(new RetrieveFixturesQuery(ligueId, new Date(date), pageNumber, paginationSize))
+        .execute(new RetrieveFixturesQuery(ligueId, undefined, new Date(after), pageNumber, paginationSize))
+        .then((f) => (result = f));
+    });
+  };
+
+  const whenIRetrieveFixtureBefore = (when) => {
+    when(/I retrieve the page (\d) of fixtures before (.*)/, (page: number, ligue: string, before: string) => {
+      pageNumber = page - 1;
+      return retrieveFixturesQueryHandler
+        .execute(new RetrieveFixturesQuery(undefined, new Date(before), undefined, pageNumber, paginationSize))
         .then((f) => (result = f));
     });
   };
@@ -49,7 +58,6 @@ defineFeature(feature, (test) => {
       expect(result.meta.page).toEqual(pageNumber);
       expect(result.data.length).toBeLessThanOrEqual(paginationSize);
 
-      console.log(JSON.stringify(result));
       result.data.forEach((fixtureResult: FixtureDto, i: number) => {
         expect(fixtureResult.homeTeam.name).toEqual(fixturesItem[i].homeTeam);
         expect(fixtureResult.awayTeam.name).toEqual(fixturesItem[i].awayTeam);
@@ -69,17 +77,21 @@ defineFeature(feature, (test) => {
       paginationSize = parseInt(size);
     });
 
-    whenIRetrievePage(when);
+    whenIRetrieveFixtureAfter(when);
 
     thenThisListOfFixtureIsReturned(then);
 
-    whenIRetrievePage(when);
+    whenIRetrieveFixtureAfter(when);
 
     thenThisListOfFixtureIsReturned(then);
 
     then(/the total count of fixtures is (\d*)/, (total: string) => {
       expect(result.meta.total).toEqual(parseInt(total));
     });
+
+    whenIRetrieveFixtureBefore(when);
+
+    thenThisListOfFixtureIsReturned(then);
   });
 
   test('Retrieving paginated list of next fixture without sizing', ({ given, when, then }) => {
@@ -98,7 +110,7 @@ defineFeature(feature, (test) => {
       );
     });
 
-    whenIRetrievePage(when);
+    whenIRetrieveFixtureAfter(when);
 
     then(/a list of fixtures is returned by (\d*)/, (size: string) => {
       expect(result.data).toHaveLength(parseInt(size));

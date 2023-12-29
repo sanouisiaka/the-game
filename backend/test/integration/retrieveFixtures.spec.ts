@@ -73,7 +73,7 @@ describe('retrieveFixtures controller tests', () => {
 
     return request(app.getHttpServer())
       .get('/fixtures')
-      .query({ leagueId: 1, from: '2022-07-04', page: 1 })
+      .query({ leagueId: 1, after: '2022-07-04', page: 1 })
       .expect(200)
       .then((response) => {
         expect(response.body.response).toHaveLength(2);
@@ -88,27 +88,33 @@ describe('retrieveFixtures controller tests', () => {
       });
   });
 
+  it('should return ok if the league is not provided', async () => {
+    mockQueryBus.execute.mockReturnValueOnce(Promise.resolve(pageFixtures));
+
+    return request(app.getHttpServer()).get('/fixtures').query({ after: '2022-07-04', page: 1 }).expect(200);
+  });
+
+  it('should return ok if the after date is not provided', async () => {
+    mockQueryBus.execute.mockReturnValueOnce(Promise.resolve(pageFixtures));
+
+    return request(app.getHttpServer()).get('/fixtures').query({ after: '2022-07-04', page: 1 }).expect(200);
+  });
+
+  it('should return ok if the before date is not provided', async () => {
+    mockQueryBus.execute.mockReturnValueOnce(Promise.resolve(pageFixtures));
+
+    return request(app.getHttpServer()).get('/fixtures').query({ after: '2022-07-04', page: 1 }).expect(200);
+  });
+
   it('should return bad request if leagueId is not a number', async () => {
     mockQueryBus.execute.mockReturnValueOnce(Promise.resolve(pageFixtures));
 
     return request(app.getHttpServer())
       .get('/fixtures')
-      .query({ from: '2022-07-04', page: 'e1', size: 10 })
+      .query({ leagueId: 'Ligue 1', after: '2022-07-04', page: 'e1', size: 10 })
       .expect(400)
       .then((response) => {
         expect(response.body.message[0]).toEqual('leagueId must be an integer number');
-      });
-  });
-
-  it('should return bad request if from date is missing', async () => {
-    mockQueryBus.execute.mockReturnValueOnce(Promise.resolve(pageFixtures));
-
-    return request(app.getHttpServer())
-      .get('/fixtures')
-      .query({ leagueId: 1, page: 1, size: 10 })
-      .expect(400)
-      .then((response) => {
-        expect(response.body.message[0]).toEqual('from should not be empty');
       });
   });
 
@@ -117,7 +123,7 @@ describe('retrieveFixtures controller tests', () => {
 
     return request(app.getHttpServer())
       .get('/fixtures')
-      .query({ leagueId: 1, from: '2022-07-04', page: '-', size: '10' })
+      .query({ leagueId: 1, after: '2022-07-04', page: '-', size: '10' })
       .expect(400)
       .then((response) => {
         expect(response.body.message[0]).toEqual('page must be an integer number');
@@ -129,7 +135,7 @@ describe('retrieveFixtures controller tests', () => {
 
     return request(app.getHttpServer())
       .get('/fixtures')
-      .query({ leagueId: 1, from: '2022-07-04', page: '1', size: 'dix' })
+      .query({ leagueId: 1, after: '2022-07-04', page: '1', size: 'dix' })
       .expect(400)
       .then((response) => {
         expect(response.body.message[0]).toEqual('size must be an integer number');
@@ -144,6 +150,6 @@ describe('retrieveFixtures controller tests', () => {
   it('should return 500 if another error occurred during the user retrieving', () => {
     isAuthenticated = true;
     mockQueryBus.execute.mockRejectedValueOnce('unknown exception');
-    return request(app.getHttpServer()).get('/fixtures').query({ leagueId: 1, from: '2022-07-04', page: 1, size: 10 }).expect(500);
+    return request(app.getHttpServer()).get('/fixtures').query({ leagueId: 1, after: '2022-07-04', page: 1, size: 10 }).expect(500);
   });
 });

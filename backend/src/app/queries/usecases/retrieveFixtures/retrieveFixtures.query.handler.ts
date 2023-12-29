@@ -13,6 +13,6 @@ export class RetrieveFixturesQueryHandler implements IQueryHandler<RetrieveFixtu
 
   async execute(query: RetrieveFixturesQuery): Promise<Page<FixtureDto>> {
     const paginationSize = query.size ? query.size : this.DEFAULT_PAGINATION_SIZE;
-    return this.fixtureRepository.getIncomingFixtures(query.leagueId, query.from, query.page, paginationSize);
+    return this.fixtureRepository.getIncomingFixtures(query.leagueId, query.before, query.after, query.page, paginationSize);
   }
 }

@@ -72,7 +72,14 @@ paths:
           description: League id of the fixtures to get
           example: 61
         - in: query
-          name: from
+          name: before
+          schema:
+            type: string
+          required: true
+          description: the date (YYYY-MM-DD) to get the fixtures from
+          example: 2023-10-01
+        - in: query
+          name: after
           schema:
             type: string
           required: true

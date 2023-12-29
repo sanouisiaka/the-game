@@ -20,7 +20,7 @@ export class RetrieveFixturesController {
     this.logger.log('new request GET /fixtures: \n' + JSON.stringify(queryParams));
 
     return this.queryBus
-      .execute(new RetrieveFixturesQuery(queryParams.leagueId, queryParams.from, queryParams.page, queryParams.size))
+      .execute(new RetrieveFixturesQuery(queryParams.leagueId, queryParams.before, queryParams.after, queryParams.page, queryParams.size))
       .then((page: Page<FixtureDto>) => new PageDto(page.data, page.meta.page, page.meta.totalPage, page.meta.total))
       .catch((e) => {
         this.logger.error(e);
