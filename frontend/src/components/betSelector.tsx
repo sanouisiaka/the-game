@@ -1,9 +1,13 @@
 import { useAppDispatch, useAppSelector } from '@/hooks';
 import { useState } from 'react';
 import { getLeagues } from '@/corelogic/store/leagues/leagues.store';
-import { getFixtures, isRetrievingPaginatedFixtures, retrievePaginatedFixturesThunk } from '@/corelogic/store/fixtures/fixtures.store';
-import Fixture from '@/components/elements/fixture';
+import {
+  getFixtures,
+  isRetrievingPaginatedFixtures,
+  retrievePaginatedIncomingFixturesThunk,
+} from '@/corelogic/store/fixtures/fixtures.store';
 import LoadingSpinnerSvg from '@/components/elements/svg/loadingSpinnerSvg';
+import FixtureOdd from '@/components/elements/fixtureOdd';
 
 export default function BetSelector() {
 
@@ -19,7 +23,7 @@ export default function BetSelector() {
 
   function handleLeagueClick(league: number) {
     selectLeague(league);
-    dispatch(retrievePaginatedFixturesThunk({ page: 0, leagueId: league, from: new Date(), size: 15 }));
+    dispatch(retrievePaginatedIncomingFixturesThunk({ page: 0, leagueId: league, size: 15 }));
   }
 
 
@@ -34,17 +38,19 @@ export default function BetSelector() {
   );
 
   const fixturesList = fixtures.map(fixture =>
-    <div key={fixture.id} className='my-2'><Fixture id={fixture.id} /></div>,
+    <div key={fixture.id} className='my-2'><FixtureOdd id={fixture.id} /></div>,
   );
 
   return (
-    <div className='h-full flex flex-col p-4'>
+    <div className='h-full flex flex-col md:p-4'>
       <div
         className='overflow-x-auto flex-none flex flex-col md:flex-row items-stretch whitespace-nowrap justify-between mx-5'>{leaguesList}</div>
 
       <div className='grow overflow-y-auto m-2'>
         {
-          loading ? <div className="h-full flex"><div className="m-auto h-8 w-8"><LoadingSpinnerSvg/></div></div>
+          loading ? <div className='h-full flex'>
+              <div className='m-auto h-8 w-8'><LoadingSpinnerSvg /></div>
+            </div>
             : fixturesList
         }
       </div>

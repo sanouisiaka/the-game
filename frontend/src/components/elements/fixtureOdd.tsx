@@ -2,11 +2,11 @@ import React, { PropsWithChildren } from 'react';
 import OddBox from '@/components/elements/oddBox';
 import { useAppDispatch, useAppSelector } from '@/hooks';
 import { getLeague } from '@/corelogic/store/leagues/leagues.store';
-import { getFixture } from '@/corelogic/store/fixtures/fixtures.store';
+import { getFixture, getFixtureReadableDate } from '@/corelogic/store/fixtures/fixtures.store';
 import { useTranslation } from '@/i18n/client';
 import { basketSlice } from '@/corelogic/store/basket/basket.store';
 
-export default function Fixture(props: PropsWithChildren<{ id: string }>) {
+export default function FixtureOdd(props: PropsWithChildren<{ id: string }>) {
 
   const { i18n } = useTranslation();
 
@@ -45,12 +45,7 @@ export default function Fixture(props: PropsWithChildren<{ id: string }>) {
     }
   }
 
-  const getFixtureReadableDate = (date: string) => new Date(date).toLocaleString(i18n.resolvedLanguage,
-    {
-      weekday: 'long',
-      day: 'numeric',
-      month: 'long',
-    });
+
 
 
   if (fixture && league) {
@@ -61,7 +56,7 @@ export default function Fixture(props: PropsWithChildren<{ id: string }>) {
           <div className='text-xs font-semibold text-slate-600'>{league.name}</div>
         </div>
         <div className='text-center font-semibold text-sm text-slate-400'>
-          {getFixtureReadableDate(fixture.date)}
+          {getFixtureReadableDate(i18n.resolvedLanguage, fixture.date)}
         </div>
         <div className='flex h-8 justify-between'>
           <div className='w-2/5 flex items-center'>

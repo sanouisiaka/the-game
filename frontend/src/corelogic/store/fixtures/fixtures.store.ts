@@ -2,10 +2,11 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { RootState } from '@/store';
 import { Fixture } from '@/corelogic/domain/fixture/fixture';
 import { GetPaginatedFixturesParam } from '@/corelogic/ports/fixture.repository.interface';
-import { retrievePaginatedFixtures } from '@/corelogic/store/fixtures/action/retrieveFixtures';
+import { retrievePaginatedIncomingFixtures, retrievePaginatedPastFixtures } from '@/corelogic/store/fixtures/action/retrieveFixtures';
 
 
 const initialState = {
+  pastFixtures: [] as Fixture[],
   fixtures: [] as Fixture[],
   currentPage: 1,
   totalPage: 1,
@@ -13,8 +14,12 @@ const initialState = {
   loading: false,
 };
 
-export const retrievePaginatedFixturesThunk = createAsyncThunk('/fixtures/retrievePaginatedFixtures',
-  async (params: GetPaginatedFixturesParam) => retrievePaginatedFixtures(params.leagueId, params.from, params.page, params.size),
+export const retrievePaginatedIncomingFixturesThunk = createAsyncThunk('/fixtures/retrievePaginatedFixtures',
+  async (params: GetPaginatedFixturesParam) => retrievePaginatedIncomingFixtures(params.leagueId, params.page, params.size),
+);
+
+export const retrievePastFixturesThunk = createAsyncThunk('/fixtures/retrievePastFixtures',
+  async () => retrievePaginatedPastFixtures(0, 5),
 );
 
 
@@ -23,7 +28,7 @@ export const fixturesSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers(builder) {
-    builder.addCase(retrievePaginatedFixturesThunk.fulfilled, (state, action) => {
+    builder.addCase(retrievePaginatedIncomingFixturesThunk.fulfilled, (state, action) => {
       state.fixtures = action.payload.response;
       state.totalFixtures = action.payload.totalCount;
       state.totalPage = action.payload.totalPage;
@@ -31,7 +36,7 @@ export const fixturesSlice = createSlice({
       state.loading = false;
     });
 
-    builder.addCase(retrievePaginatedFixturesThunk.rejected, (state) => {
+    builder.addCase(retrievePaginatedIncomingFixturesThunk.rejected, (state) => {
       state.fixtures = [];
       state.currentPage = 1;
       state.totalPage = 1;
@@ -39,13 +44,19 @@ export const fixturesSlice = createSlice({
       state.loading = false;
     });
 
-    builder.addCase(retrievePaginatedFixturesThunk.pending, (state) => {
+    builder.addCase(retrievePaginatedIncomingFixturesThunk.pending, (state) => {
       state.loading = true;
+    });
+
+    builder.addCase(retrievePastFixturesThunk.fulfilled, (state, action) => {
+      state.pastFixtures = action.payload.response;
     });
   },
 });
 
 export default fixturesSlice.reducer;
+
+export const getPastFixtures = (state: RootState) => state.fixtures.pastFixtures;
 
 export const getFixtures = (state: RootState) => state.fixtures.fixtures;
 
@@ -57,7 +68,22 @@ export const getFixturesTotalPages = (state: RootState) => state.fixtures.totalP
 
 export const isRetrievingPaginatedFixtures = (state: RootState) => state.fixtures.loading;
 
-export const getFixture = (fixtureId: string) => (state: RootState) => state.fixtures.fixtures.find(f => f.id === fixtureId);
+export const getFixture = (fixtureId: string) => (state: RootState) => {
+  const fixture = state.fixtures.fixtures.find(f => f.id === fixtureId);
+  if (!fixture) {
+    return state.fixtures.pastFixtures.find(f => f.id === fixtureId);
+  }
+  return fixture;
+};
+
+export const getFixtureReadableDate = (lang: string | undefined, date: string) => new Date(date).toLocaleTimeString(lang,
+  {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    hour: 'numeric',
+    minute: 'numeric',
+  });
 
 
 

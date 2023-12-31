@@ -13,8 +13,13 @@ export class FixtureRepository implements IFixtureRepository {
   constructor(@inject(AXIOS_HTTP_CLIENT) private axiosHttp: HttpClient) {
   }
 
-  async getPaginatedFixtures(leagueId: number, after: Date, page: number, size?: number): Promise<Page<Fixture>> {
-    return this.axiosHttp.get<AxiosResponse<Page<Fixture>>>('/fixtures', { leagueId, after, page, size })
+  async getPaginatedIncomingFixtures(leagueId: number, page: number, size?: number): Promise<Page<Fixture>> {
+    return this.axiosHttp.get<AxiosResponse<Page<Fixture>>>('/fixtures', { leagueId, after: new Date(), page, size })
+      .then(response => response.data);
+  }
+
+  async getPaginatedPastFixtures(page: number, size?: number): Promise<Page<Fixture>> {
+    return this.axiosHttp.get<AxiosResponse<Page<Fixture>>>('/fixtures', { before: new Date(), page, size })
       .then(response => response.data);
   }
 

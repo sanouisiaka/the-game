@@ -2,7 +2,8 @@
   "title": "je suis en francais",
   "hello": "Bonjour {{ firstname }} !",
   "fixture": {
-   "incoming": "Matches à venir"
+   "incoming": "Matches à venir",
+    "live": "En cours"
   },
   "bet": {
     "bet": "Mise",
