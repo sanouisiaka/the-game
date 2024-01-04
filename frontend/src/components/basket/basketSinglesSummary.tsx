@@ -3,7 +3,7 @@ import { useAppSelector } from '@/hooks';
 import { getBasketBets, getBetsTotalAmount, getTotalBetsPotential } from '@/corelogic/store/basket/basket.store';
 import { useTranslation } from '@/i18n/client';
 
-export function BasketSinglesSubmit() {
+export function BasketSinglesSummary() {
 
   const { t } = useTranslation();
 
@@ -27,9 +27,6 @@ export function BasketSinglesSubmit() {
             {t('bet.totalPotentialGain')}
           </div>
           <BetPoints points={cumulatePotential} />
-        </div>
-        <div className='mx-auto my-2'>
-          <button className='rounded-md bg-violet-700 text-gray-100 px-2 py-1'>{t('submit')}</button>
         </div>
       </div>
     );

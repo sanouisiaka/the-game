@@ -9,9 +9,11 @@
     "bet": "Mise",
     "last": "Mes derniers paris",
     "addBetToStart": "Bet sur un match pour créer un ticket !",
+    "selectLeagueToStart": "Choisis une compétition pour y voir les prochains matches",
     "potentialGain": "Gain potentiel",
     "totalPotentialGain": "Gain potentiel total",
-    "parlayOdd": "Côte total"
+    "parlayOdd": "Côte total",
+    "submitted": "Pari déposé ! Plus qu'a croiser les doigts..."
   },
   "submit": "Valider",
   "ranking": "Classement",

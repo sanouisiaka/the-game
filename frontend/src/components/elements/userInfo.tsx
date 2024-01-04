@@ -9,8 +9,8 @@ export default function UserInfo() {
 
   const connectedUser = useAppSelector(getConnectedUser);
 
-  return (
-    <div className='flex bg-sunset-100 h-full w-full flex-col p-4 font-bold'>
+  const Info = () => (
+    <div className='h-full w-full'>
       <div className='h-1/2'>
         <div className='justify-center flex h-full'>
           <div className='w-1/5 md:w-1/2'>
@@ -47,6 +47,12 @@ export default function UserInfo() {
           </div>
         </div>
       </div>
+    </div>
+  );
+
+  return (
+    <div className='flex bg-sunset-100 h-full w-full flex-col p-4 font-bold'>
+      {connectedUser.id && <Info/>}
     </div>
   );
 }

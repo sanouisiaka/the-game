@@ -9,7 +9,7 @@ import {
 import { useTranslation } from '@/i18n/client';
 import { BetAmountInput } from '@/components/elements/betAmountInput';
 
-export function BasketParlaySubmit() {
+export function BasketParlaySummary() {
 
   const { t } = useTranslation();
 
@@ -40,9 +40,6 @@ export function BasketParlaySubmit() {
         </div>
         <BetAmountInput inputValue={parlayAmount} potential={parlayPotential} action={addParlayAmount} />
 
-        <div className='mx-auto my-2'>
-          <button className='rounded-md bg-violet-700 text-gray-100 px-2 py-1'>{t('submit')}</button>
-        </div>
       </div>
     );
   }

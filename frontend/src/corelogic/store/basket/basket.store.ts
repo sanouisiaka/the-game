@@ -1,10 +1,11 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { RootState } from '@/store';
 import { addBet } from '@/corelogic/store/basket/action/addBet';
 import { removeBet } from '@/corelogic/store/basket/action/removeBet';
 import { setBasketType } from '@/corelogic/store/basket/action/setBasketType';
 import { addAmountToBet } from '@/corelogic/store/basket/action/addAmountToBet';
 import { addParlayAmount } from '@/corelogic/store/basket/action/addParlayAmount';
+import { submit } from '@/corelogic/store/basket/action/submit';
 
 export enum BasketType {
   SINGLE, MULTIPLE
@@ -13,7 +14,13 @@ export enum BasketType {
 const initialState = {
   chosenBets: [] as Bet[],
   type: BasketType.MULTIPLE,
+  submitting: false,
 } as Basket;
+
+
+export const submitBetsThunk = createAsyncThunk('/basket/submit',
+  async () => submit(),
+);
 
 export const basketSlice = createSlice({
   name: 'basket',
@@ -25,8 +32,23 @@ export const basketSlice = createSlice({
     removeBet,
     setBasketType,
   },
+  extraReducers(builder) {
+    builder.addCase(submitBetsThunk.fulfilled, (state) => {
+      state.chosenBets = [];
+      state.type = BasketType.MULTIPLE;
+      state.parlayAmount = 0;
+      state.submitting = false;
+    });
+    builder.addCase(submitBetsThunk.rejected, (state) => {
+      state.submitting = false;
+    });
+    builder.addCase(submitBetsThunk.pending, (state) => {
+      state.submitting = true;
+    });
+  },
 });
 
+export const isBetsSubmitting = (state: RootState) => state.basket.submitting;
 
 export const getBasketBets = (state: RootState) => state.basket.chosenBets;
 export const getBasketType = (state: RootState) => state.basket.type;
@@ -87,7 +109,8 @@ function round(value: number) {
 export interface Basket {
   chosenBets: Bet[],
   type: BasketType,
-  parlayAmount: number
+  parlayAmount: number,
+  submitting: boolean,
 }
 
 export type Bet = {
