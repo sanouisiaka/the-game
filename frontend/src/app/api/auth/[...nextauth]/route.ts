@@ -4,6 +4,9 @@ import { googleRepository } from '@/rest/google.repository'
 
 export const authOptions = {
   secret: process.env.NEXTAUTH_SECRET,
+  pages: {
+    signIn: '/',
+  },
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID as string,

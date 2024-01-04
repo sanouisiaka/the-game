@@ -6,6 +6,7 @@ import { getServerSession } from 'next-auth'
 import ClientProvider from '@/components/auth/client-provider'
 import { config } from '@fortawesome/fontawesome-svg-core'
 import ReduxProvider from '@/components/ReduxProvider'
+import Header from '@/components/header';
 
 config.autoAddCss = false
 
@@ -25,6 +26,9 @@ export default async function RootLayout({ children }: {
     <html lang="en" className="h-screen min-w-full overflow-hidden">
       <body className="w-full h-full">
         <script src="https://accounts.google.com/gsi/client" async></script>
+        <div className="h-1/6">
+          <Header/>
+        </div>
         <ClientProvider session={session}>
           <ReduxProvider>
             {children}

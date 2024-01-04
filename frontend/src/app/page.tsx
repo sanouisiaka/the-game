@@ -2,7 +2,7 @@
 
 import { useSession } from 'next-auth/react';
 import { redirect } from 'next/navigation';
-import Welcome from '@/components/welcome';
+import WelcomeFr from '@/components/welcomeFr';
 
 export default function Root() {
 
@@ -15,7 +15,7 @@ export default function Root() {
     <div className="h-full flex flex-col has-background-primary">
       <div className="flex-initial h-1/6"></div>
       <div className="flex-auto">
-        <Welcome/>
+        <WelcomeFr/>
       </div>
       <div className="flex-auto h-1/6"></div>
     </div>

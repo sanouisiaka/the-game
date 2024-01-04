@@ -19,7 +19,7 @@ export default function LastFixtures() {
   );
 
   return (
-    <Carousel slideInterval={10000} pauseOnHover>
+    <Carousel slideInterval={10000} pauseOnHover indicators={false} leftControl={<span/>} rightControl={<span/>}>
       {fixturesList}
     </Carousel>
   );

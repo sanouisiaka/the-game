@@ -17,7 +17,6 @@
     "@tailwindcss/forms": "0.5.7",
     "autoprefixer": "10.4.15",
     "axios": "^1.5.0",
-    "bulma": "^0.9.4",
     "eslint": "8.49.0",
     "eslint-config-next": "13.4.19",
     "flowbite-react": "^0.7.2",

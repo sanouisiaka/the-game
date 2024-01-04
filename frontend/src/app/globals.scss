@@ -18,13 +18,8 @@
 }
 
 
-@import "node_modules/bulma/bulma.sass";
 @import "@fortawesome/fontawesome-svg-core/styles.css";
 body {
-  //color: rgb(var(--foreground-rgb));
-
-  font-family: $family-primary;
-  color: $black;
   scrollbar-width: thin;
 }
 
