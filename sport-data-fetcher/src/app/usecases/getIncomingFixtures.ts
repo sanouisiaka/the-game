@@ -16,12 +16,18 @@ export class GetIncomingFixtures {
   @Cron('0 1 * * *') // every day at 1am
   getIncomingFixtures() {
     Object.values(League).map((league) => {
-      this.footballRepository.getIncomingFixtures(league).then((fixtures) => {
-        fixtures.forEach((fixture) => {
-          this.client.emit('FIXTURE', fixture);
-          this.logger.log('new fixture event emitted ' + JSON.stringify(fixture));
+      this.footballRepository
+        .getIncomingFixtures(league)
+        .then((fixtures) => {
+          fixtures.forEach((fixture) => {
+            this.client.emit('FIXTURE', fixture);
+            this.logger.log('new fixture event emitted ' + JSON.stringify(fixture));
+          });
+        })
+        .catch((e) => {
+          this.logger.error('error in retrieving incoming fixtures for league' + league + '\n' + JSON.stringify(e));
+          this.logger.error(JSON.stringify(e));
         });
-      });
     });
   }
 }

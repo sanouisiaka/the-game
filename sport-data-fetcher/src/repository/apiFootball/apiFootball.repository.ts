@@ -70,12 +70,16 @@ export class ApiFootballRepository implements IFootballRepository {
   }
 
   private getResponseOrReject<T = any>(axiosResponse: AxiosResponse<apiDataScheme>): Promise<T> {
-    if (axiosResponse?.data?.errors && axiosResponse.data.errors.length > 0) {
-      return Promise.reject(axiosResponse.data.errors);
-    }
     if (!axiosResponse?.data?.response) {
       return Promise.reject(new ApiResponseNotFound());
     }
-    return axiosResponse.data.response;
+
+    console.log(!axiosResponse?.data?.errors);
+    console.log(axiosResponse?.data?.errors?.length);
+    if (!axiosResponse?.data?.errors || axiosResponse?.data?.errors?.length === 0) {
+      return axiosResponse.data.response;
+    } else {
+      return Promise.reject(axiosResponse.data.errors);
+    }
   }
 }

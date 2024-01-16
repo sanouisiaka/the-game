@@ -14,15 +14,21 @@ export class GetFixturesOdds {
 
   private readonly logger = new Logger(GetFixturesOdds.name);
 
-  @Cron('0 */3 * * *') // every three hour
+  @Cron('0 */6 * * *') // every six hour
   getOdds() {
     Object.values(League).map((league) => {
-      this.footballRepository.getOdds(league, new Date().getFullYear(), Bookmaker.UNIBET, BetType.WINNER).then((bets) => {
-        bets.forEach((bet) => {
-          this.client.emit('BETS', bet);
-          this.logger.log('new BETS event emitted ' + JSON.stringify(bet));
+      this.footballRepository
+        .getOdds(league, new Date().getFullYear(), Bookmaker.UNIBET, BetType.WINNER)
+        .then((bets) => {
+          bets.forEach((bet) => {
+            this.client.emit('BETS', bet);
+            this.logger.log('new BETS event emitted ' + JSON.stringify(bet));
+          });
+        })
+        .catch((e) => {
+          this.logger.error('error in retrieving odds for league' + league + '\n' + JSON.stringify(e));
+          this.logger.error(JSON.stringify(e));
         });
-      });
     });
   }
 }

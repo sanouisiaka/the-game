@@ -16,8 +16,13 @@ jest.mock('axios');
 describe('api football repository tests', () => {
   const apiFootballRepository = new ApiFootballRepository();
 
+  beforeEach(() => {
+    mockAxios.request.mockRestore();
+  });
+
   it('should return fixtures list from apiFootball response', async () => {
     mockAxios.request.mockImplementationOnce(() => Promise.resolve({ data: apiFootballFixturesResponse }));
+
     const fixtures = await apiFootballRepository.getIncomingFixtures(League.LIGUE1);
 
     expect(fixtures.length).toEqual(1);
@@ -33,6 +38,7 @@ describe('api football repository tests', () => {
 
   it('should return teams list from apiFootball response', async () => {
     mockAxios.request.mockImplementationOnce(() => Promise.resolve({ data: apiFootballTeamsResponse }));
+
     const teams = await apiFootballRepository.getTeams(League.LIGUE1, 2023);
 
     expect(teams.length).toBe(2);

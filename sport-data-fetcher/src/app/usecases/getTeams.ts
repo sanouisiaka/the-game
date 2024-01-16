@@ -16,12 +16,18 @@ export class GetTeams {
   @Cron('0 0 * * 0') // one a week
   getTeams() {
     Object.values(League).map((league) => {
-      this.footballRepository.getTeams(league, new Date().getFullYear()).then((teams) => {
-        teams.forEach((team) => {
-          this.client.emit('TEAM', team);
-          this.logger.log('new team event emitted ' + JSON.stringify(team));
+      this.footballRepository
+        .getTeams(league, new Date().getFullYear())
+        .then((teams) => {
+          teams.forEach((team) => {
+            this.client.emit('TEAM', team);
+            this.logger.log('new team event emitted ' + JSON.stringify(team));
+          });
+        })
+        .catch((e) => {
+          this.logger.error('error in retrieving teams for league' + league + '\n' + JSON.stringify(e));
+          this.logger.error(JSON.stringify(e));
         });
-      });
     });
   }
 }

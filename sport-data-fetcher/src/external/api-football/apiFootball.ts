@@ -22,9 +22,7 @@ export interface apiDataScheme {
   parameters?: {
     field?: string;
   }[];
-  errors?: {
-    field?: string;
-  }[];
+  errors?: any;
   results?: number;
   response?: any;
 }
