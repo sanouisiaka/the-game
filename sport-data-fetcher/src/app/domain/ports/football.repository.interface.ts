@@ -2,9 +2,9 @@ import { Bet, Fixture, League, Team } from '../football';
 import { BetType, Bookmaker } from '../../../external/api-football/apiFootball';
 
 export interface IFootballRepository {
-  getIncomingFixtures(league: League): Promise<Fixture[]>;
+  getIncomingFixtures(league: League, season: number): Promise<Fixture[]>;
 
-  getTodayFixtures(league: League): Promise<Fixture[]>;
+  getTodayFixtures(league: League, season: number): Promise<Fixture[]>;
 
   getTeams(league: League, season: number): Promise<Team[]>;
 

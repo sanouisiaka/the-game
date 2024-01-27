@@ -1,11 +1,12 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { Cron } from '@nestjs/schedule';
 import { IFootballRepository } from '../domain/ports/football.repository.interface';
 import { ClientProxy } from '@nestjs/microservices';
 import { League } from '../domain/football';
+import { Handler } from '../../config/handler';
+import { FootRequestModel } from './model/footRequestModel';
 
 @Injectable()
-export class GetIncomingFixtures {
+export class GetIncomingFixtures implements Handler<FootRequestModel> {
   constructor(
     @Inject('FOOT_DATA_SERVICE') private client: ClientProxy,
     @Inject(IFootballRepository) private readonly footballRepository: IFootballRepository,
@@ -13,12 +14,12 @@ export class GetIncomingFixtures {
 
   private readonly logger = new Logger(GetIncomingFixtures.name);
 
-  @Cron('0 1 * * *') // every day at 1am
-  getIncomingFixtures() {
+  handle(request: FootRequestModel) {
     Object.values(League).map((league) => {
       this.footballRepository
-        .getIncomingFixtures(league)
+        .getIncomingFixtures(league, request.season)
         .then((fixtures) => {
+          this.logger.log(fixtures.length + 'incoming fixtures in ' + league);
           fixtures.forEach((fixture) => {
             this.client.emit('FIXTURE', fixture);
             this.logger.log('new fixture event emitted ' + JSON.stringify(fixture));

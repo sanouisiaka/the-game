@@ -27,22 +27,21 @@ export class ApiFootballRepository implements IFootballRepository {
       .then((r) => this.apiFootMapper.teamsDataToDomain(r));
   }
 
-  async getIncomingFixtures(league: League): Promise<Fixture[]> {
+  async getIncomingFixtures(league: League, season: number): Promise<Fixture[]> {
     const today = new Date();
     const from = today.toISOString().split('T')[0];
     const timestamp = today.setFullYear(today.getFullYear() + 1);
     const to = new Date(timestamp).toISOString().split('T')[0];
     return this.apiFootball.fixtures
-      .getFixtures({ league: this.leaguesId.get(league), season: new Date().getFullYear(), from, to })
+      .getFixtures({ league: this.leaguesId.get(league), season, from, to })
       .then((r) => this.getResponseOrReject(r))
       .then((r) => this.apiFootMapper.fixturesDataToDomain(r));
   }
 
-  async getTodayFixtures(league: League): Promise<Fixture[]> {
-    const dateString = new Date().toISOString().split('-')[0];
-
+  async getTodayFixtures(league: League, season: number): Promise<Fixture[]> {
+    const dateString = new Date().toISOString().split('T')[0];
     return this.apiFootball.fixtures
-      .getFixtures({ league: this.leaguesId.get(league), season: new Date().getFullYear(), date: dateString })
+      .getFixtures({ league: this.leaguesId.get(league), season, date: dateString })
       .then((r) => this.getResponseOrReject(r))
       .then((r) => this.apiFootMapper.fixturesDataToDomain(r));
   }
@@ -70,12 +69,10 @@ export class ApiFootballRepository implements IFootballRepository {
   }
 
   private getResponseOrReject<T = any>(axiosResponse: AxiosResponse<apiDataScheme>): Promise<T> {
+    console.log(JSON.stringify(axiosResponse.data));
     if (!axiosResponse?.data?.response) {
       return Promise.reject(new ApiResponseNotFound());
     }
-
-    console.log(!axiosResponse?.data?.errors);
-    console.log(axiosResponse?.data?.errors?.length);
     if (!axiosResponse?.data?.errors || axiosResponse?.data?.errors?.length === 0) {
       return axiosResponse.data.response;
     } else {

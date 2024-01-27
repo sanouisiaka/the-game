@@ -23,7 +23,7 @@ describe('api football repository tests', () => {
   it('should return fixtures list from apiFootball response', async () => {
     mockAxios.request.mockImplementationOnce(() => Promise.resolve({ data: apiFootballFixturesResponse }));
 
-    const fixtures = await apiFootballRepository.getIncomingFixtures(League.LIGUE1);
+    const fixtures = await apiFootballRepository.getIncomingFixtures(League.LIGUE1, 2023);
 
     expect(fixtures.length).toEqual(1);
     expect(fixtures[0].api_foot_id).toEqual(apiFootballFixturesResponse.response[0].fixture.id);
@@ -74,21 +74,21 @@ describe('api football repository tests', () => {
 
   it('should reject if apiFootball returns a error', async () => {
     mockAxios.request.mockImplementation(() => Promise.resolve({ data: apiErrorResponse }));
-    await expect(apiFootballRepository.getIncomingFixtures(League.LIGUE1)).rejects.toEqual(apiErrorResponse.errors);
+    await expect(apiFootballRepository.getIncomingFixtures(League.LIGUE1, 2023)).rejects.toEqual(apiErrorResponse.errors);
     await expect(apiFootballRepository.getTeams(League.LIGUE1, 2023)).rejects.toEqual(apiErrorResponse.errors);
     await expect(apiFootballRepository.getOdds(League.LIGUE1, 2023, Bookmaker.UNIBET, 1)).rejects.toEqual(apiErrorResponse.errors);
   });
 
   it('should reject if apiFootball is not available', async () => {
     mockAxios.request.mockImplementation(() => Promise.reject({}));
-    await expect(apiFootballRepository.getIncomingFixtures(League.LIGUE1)).rejects.toEqual({});
+    await expect(apiFootballRepository.getIncomingFixtures(League.LIGUE1, 2023)).rejects.toEqual({});
     await expect(apiFootballRepository.getTeams(League.LIGUE1, 2023)).rejects.toEqual({});
     await expect(apiFootballRepository.getOdds(League.LIGUE1, 2023, Bookmaker.UNIBET, 1)).rejects.toEqual({});
   });
 
   it('should reject if apiFootball returns no response', async () => {
     mockAxios.request.mockImplementation(() => Promise.resolve({ data: {} }));
-    await expect(apiFootballRepository.getIncomingFixtures(League.LIGUE1)).rejects.toEqual(new ApiResponseNotFound());
+    await expect(apiFootballRepository.getIncomingFixtures(League.LIGUE1, 2023)).rejects.toEqual(new ApiResponseNotFound());
     await expect(apiFootballRepository.getTeams(League.LIGUE1, 2023)).rejects.toEqual(new ApiResponseNotFound());
     await expect(apiFootballRepository.getOdds(League.LIGUE1, 2023, Bookmaker.UNIBET, 1)).rejects.toEqual(new ApiResponseNotFound());
   });

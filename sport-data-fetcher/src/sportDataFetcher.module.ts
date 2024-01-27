@@ -8,10 +8,15 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
 import { GetFixturesOdds } from './app/usecases/getFixturesOdds';
 import { GetTeams } from './app/usecases/getTeams';
 import { UpdateFixtures } from './app/usecases/updateFixtures';
+import configuration from './config/configuration';
+import { UpdateFixtureScheduler } from './app/scheduler/updateFixtureScheduler';
+import { GetFixturesOddsScheduler } from './app/scheduler/getFixturesOddsScheduler';
+import { GetIncomingFixturesScheduler } from './app/scheduler/getIncomingFixturesScheduler';
+import { GetTeamsScheduler } from './app/scheduler/getTeamsScheduler';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
+    ConfigModule.forRoot({ isGlobal: true, load: [configuration] }),
     ScheduleModule.forRoot(),
     ClientsModule.registerAsync([
       {
@@ -28,6 +33,16 @@ import { UpdateFixtures } from './app/usecases/updateFixtures';
     ]),
   ],
   controllers: [],
-  providers: [{ provide: IFootballRepository, useClass: ApiFootballRepository }, GetTeams, GetIncomingFixtures, UpdateFixtures, GetFixturesOdds],
+  providers: [
+    { provide: IFootballRepository, useClass: ApiFootballRepository },
+    GetTeamsScheduler,
+    GetIncomingFixturesScheduler,
+    UpdateFixtureScheduler,
+    GetFixturesOddsScheduler,
+    GetTeams,
+    GetIncomingFixtures,
+    UpdateFixtures,
+    GetFixturesOdds,
+  ],
 })
 export class SportDataFetcherModule {}

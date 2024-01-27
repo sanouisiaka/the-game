@@ -3,10 +3,11 @@ import { IFootballRepository } from '../domain/ports/football.repository.interfa
 import { ClientProxy } from '@nestjs/microservices';
 import { League } from '../domain/football';
 import { BetType, Bookmaker } from '../../external/api-football/apiFootball';
-import { Cron } from '@nestjs/schedule';
+import { Handler } from '../../config/handler';
+import { FootRequestModel } from './model/footRequestModel';
 
 @Injectable()
-export class GetFixturesOdds {
+export class GetFixturesOdds implements Handler<FootRequestModel> {
   constructor(
     @Inject('FOOT_DATA_SERVICE') private client: ClientProxy,
     @Inject(IFootballRepository) private readonly footballRepository: IFootballRepository,
@@ -14,12 +15,12 @@ export class GetFixturesOdds {
 
   private readonly logger = new Logger(GetFixturesOdds.name);
 
-  @Cron('0 */6 * * *') // every six hour
-  getOdds() {
+  handle(request: FootRequestModel) {
     Object.values(League).map((league) => {
       this.footballRepository
-        .getOdds(league, new Date().getFullYear(), Bookmaker.UNIBET, BetType.WINNER)
+        .getOdds(league, request.season, Bookmaker.UNIBET, BetType.WINNER)
         .then((bets) => {
+          this.logger.log(bets.length + 'to update in' + league);
           bets.forEach((bet) => {
             this.client.emit('BETS', bet);
             this.logger.log('new BETS event emitted ' + JSON.stringify(bet));
