@@ -7,7 +7,7 @@ export default withAuth(function middleware() {
   {
     callbacks: {
       authorized: ({ req, token }) => {
-        return token !== null || req.nextUrl.pathname === '/';
+        return token !== null || req.nextUrl.pathname === '/signIn';
 
       },
     },

@@ -1,23 +1,21 @@
 'use client';
 
-import { useSession } from 'next-auth/react';
-import { redirect } from 'next/navigation';
-import WelcomeFr from '@/components/welcomeFr';
+import Bento from '@/components/bento';
+import { useAppDispatch } from '@/hooks';
+import { retrieveUserThunk } from '@/corelogic/store/user/user.store';
+import { retrieveLeaguesThunk } from '@/corelogic/store/leagues/leagues.store';
 
-export default function Root() {
+export default function Home() {
 
-  const { status } = useSession();
-  if (status === 'authenticated') {
-    redirect('/home');
-  }
+  const dispatch = useAppDispatch();
+  dispatch(retrieveUserThunk());
+  dispatch(retrieveLeaguesThunk());
 
   return (
-    <div className="h-full flex flex-col has-background-primary">
-      <div className="flex-initial h-1/6"></div>
-      <div className="flex-auto">
-        <WelcomeFr/>
+    <div className='h-full flex flex-col bg-neutral-50'>
+      <div className='overflow-scroll md:h-5/6'>
+        <Bento />
       </div>
-      <div className="flex-auto h-1/6"></div>
     </div>
   );
 

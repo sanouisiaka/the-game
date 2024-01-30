@@ -5,7 +5,7 @@ import { googleRepository } from '@/rest/google.repository'
 export const authOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   pages: {
-    signIn: '/',
+    signIn: '/signIn',
   },
   providers: [
     GoogleProvider({
@@ -47,6 +47,9 @@ export const authOptions = {
       return token;
 
 
+    },
+    async redirect({ baseUrl }: any) {
+      return baseUrl
     }
   }
 }

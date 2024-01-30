@@ -14,7 +14,7 @@ export default function WelcomeFr() {
           <div className='block'>Plonge dans le monde du pari sportif <span className='font-semibold text-sunset-500'>sans dépenser 1 centime !</span>
           </div>
           <div className='block'>
-            Parie des <span className='text-violet-700 font-bold'>BetCoins</span> et compare tes résultats aux joueurs du monde entier.
+            Paries des <span className='text-violet-700 font-bold'>BetCoins</span> et compare tes résultats à ceux des joueurs du monde entier.
           </div>
           <div className='block'><span className='font-semibold text-sunset-500'>Récompenses quotidiennes</span>, <span
             className='font-semibold text-sunset-500'>défis</span>, <span
