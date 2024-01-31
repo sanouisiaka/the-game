@@ -9,17 +9,15 @@ async function bootstrap() {
   app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.TCP,
     options: {
-      port: 8123,
+      port: parseInt(process.env.TCP_PORT),
     },
   });
   await app.startAllMicroservices();
 
   //enable cors
-  app.enableCors({
-    origin: 'http://localhost:3000',
-  });
+  app.enableCors();
   app.useGlobalPipes(new ValidationPipe());
-  await app.listen(8080);
+  await app.listen(parseInt(process.env.BACKEND_PORT));
 }
 
 bootstrap();
