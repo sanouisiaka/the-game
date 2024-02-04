@@ -3,14 +3,12 @@ import { AuthGuard } from '../../src/api/auth.guard';
 import { ExecutionContext, INestApplication, ValidationPipe } from '@nestjs/common';
 import * as request from 'supertest';
 import { InvalidEmail } from '../../src/app/domain/user/error/invalidEmail.error';
-import { InvalidFirstname } from '../../src/app/domain/user/error/invalidFirstname.error';
-import { InvalidLastname } from '../../src/app/domain/user/error/invalidLastname.error';
 import { CommandBus, CqrsModule } from '@nestjs/cqrs';
 import { createMock } from '@golevelup/ts-jest';
-import * as assert from 'assert';
 import { mockAuthUser } from './mock/mock.auth';
 import { ConfigModule } from '@nestjs/config';
 import { CreateUserController } from '../../src/api/usecases/createUser/createUser.controller';
+import { InvalidName } from '../../src/app/domain/user/error/invalidName.error';
 
 describe('createUser controller tests', () => {
   let app: INestApplication;
@@ -22,7 +20,7 @@ describe('createUser controller tests', () => {
   });
 
   let isAuthenticated = true;
-  const user = { email: 'willaiam@gmail.com', name: 'Will iam', family_name: 'IAM' };
+  const user = { email: 'willaiam@gmail.com' };
   beforeEach(async () => {
     const moduleCreateUser: TestingModule = await Test.createTestingModule({
       imports: [CqrsModule, ConfigModule],
@@ -51,11 +49,21 @@ describe('createUser controller tests', () => {
   it('should return CREATED if the user creation succeed', async () => {
     return request(app.getHttpServer())
       .post('/users')
+      .send({ name: 'Isiaka Sanou' })
       .expect(201)
       .then((response) => {
         expect(response.body.email).toEqual(user.email);
-        expect(response.body.firstname).toEqual(user.name.split(' ')[0]);
-        expect(response.body.lastname).toEqual(user.family_name);
+        expect(response.body.name).toEqual('Isiaka Sanou');
+      });
+  });
+
+  it('should return CREATED with basic names if user provide no info', async () => {
+    return request(app.getHttpServer())
+      .post('/users')
+      .expect(201)
+      .then((response) => {
+        expect(response.body.email).toEqual(user.email);
+        expect(response.body.name).toEqual('John Doe');
       });
   });
 
@@ -77,25 +85,14 @@ describe('createUser controller tests', () => {
       });
   });
 
-  it('should return 400 if the user creation fail because of a wrong firstname', () => {
+  it('should return 400 if the user creation fail because of a wrong name', () => {
     isAuthenticated = true;
-    mockCommandBus.execute.mockRejectedValueOnce(new InvalidFirstname());
+    mockCommandBus.execute.mockRejectedValueOnce(new InvalidName());
     return request(app.getHttpServer())
       .post('/users')
       .expect(400)
       .then((response) => {
-        expect(response.body.message).toEqual(new InvalidFirstname().message);
-      });
-  });
-
-  it('should return 400 if the user creation fail because of a wrong lastname', () => {
-    isAuthenticated = true;
-    mockCommandBus.execute.mockRejectedValueOnce(new InvalidLastname());
-    return request(app.getHttpServer())
-      .post('/users')
-      .expect(400)
-      .then((response) => {
-        assert(response.body.message, new InvalidLastname().message);
+        expect(response.body.message).toEqual(new InvalidName().message);
       });
   });
 

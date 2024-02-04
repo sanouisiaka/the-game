@@ -30,7 +30,7 @@ export function getWinnerId(fixture: Fixture): number | undefined{
   if (fixture?.status === 'CLOSE'){
     if(fixture.homeTeam.goal > fixture.awayTeam.goal){
       return fixture.homeTeam.id;
-    } else if(fixture.homeTeam.goal > fixture.awayTeam.goal) {
+    } else if(fixture.homeTeam.goal < fixture.awayTeam.goal) {
       return fixture.awayTeam.id;
     }
   }

@@ -1,9 +1,8 @@
 import FootballPlayerSvg from '@/components/elements/svg/footballPlayerSvg';
 import { useAppSelector } from '@/hooks';
 import { getConnectedUser } from '@/corelogic/store/user/user.store';
-import { faRankingStar } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PointsSvg from '@/components/elements/svg/pointsSvg';
+import RankingSvg from "@/components/elements/svg/rankingSvg";
 
 export default function UserInfo() {
 
@@ -20,18 +19,18 @@ export default function UserInfo() {
           </div>
           <div className='w-4/5 md:w-1/2'>
             <div className='h-full flex flex-col justify-center text-lg leading-none'>
-              {connectedUser.firstname} {connectedUser.lastname}
+              {connectedUser.name}
               <br />
               <span className='text-xs font-normal'>Depuis: 01/01/1990</span>
             </div>
           </div>
         </div>
       </div>
-      <div className='h-1/2 flex flex-col justify-center px-3 text-violet-700'>
+      <div className='h-1/2 flex flex-col justify-end px-5 pb-1 text-violet-700'>
         <div className='flex w-full h-1/2'>
           <div className='w-1/2 flex items-center flex-wrap'>
             <div className='h-full'>
-              <FontAwesomeIcon icon={faRankingStar} className='h-full text-violet-700' />
+              <RankingSvg/>
             </div>
             <div>
               54<span className='text-xs font-semibold'>/1239</span>

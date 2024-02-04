@@ -4,6 +4,7 @@ import UserInfo from '@/components/elements/userInfo';
 import { useTranslation } from '@/i18n/client';
 import Basket from '@/components/basket/basket';
 import LastFixtures from '@/components/lastFixtures';
+import WorkInProgress from "@/components/workInProgress";
 
 export default function Bento() {
   const { t } = useTranslation();
@@ -32,11 +33,14 @@ export default function Bento() {
       </div>
       <div className='py-2 md:py-0 md:row-start-2 md:row-span-2 md:col-start-3 md:col-span-2'>
         <Box title={t('ranking')} accordion={false}>
+          <WorkInProgress/>
         </Box>
       </div>
 
       <div className='py-2 md:py-0 md:row-start-4 md:col-span-4 md:col-start-1'>
-        <Box title={t('bet.last')} accordion={false}/>
+        <Box title={t('bet.last')} accordion={false}>
+          <WorkInProgress/>
+        </Box>
       </div>
     </div>
   );

@@ -36,8 +36,6 @@ export class AuthGuard implements CanActivate {
         audience: this.configService.get('GOOGLE_AUTH_CLIENT_ID'),
       })
       .then((ticket) => ticket.getPayload() as UserInfo);
-    // const payload = ticket.getPayload();
-    // console.log(payload);
   }
 }
 

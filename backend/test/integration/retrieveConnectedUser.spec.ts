@@ -16,7 +16,7 @@ describe('retrieveConnectedUser controller tests', () => {
   const mockQueryBus = createMock<QueryBus>();
 
   let isAuthenticated = true;
-  const user = { email: 'willaiam@gmail.com', name: 'Will', family_name: 'iam' };
+  const user = { email: 'willaiam@gmail.com', name: 'William' };
 
   beforeEach(async () => {
     const moduleRetrieveConnectedUser: TestingModule = await Test.createTestingModule({
@@ -44,7 +44,7 @@ describe('retrieveConnectedUser controller tests', () => {
   });
 
   it('should return OK if the user retrieve exists', async () => {
-    const user = User.build('1', 'will@gmail.com', 'will', 'iam');
+    const user = User.build('1', 'will@gmail.com', 'william');
     mockQueryBus.execute.mockReturnValueOnce(Promise.resolve(user));
 
     return request(app.getHttpServer())
@@ -52,8 +52,7 @@ describe('retrieveConnectedUser controller tests', () => {
       .expect(200)
       .then((response) => {
         expect(response.body.email).toEqual(user._email);
-        expect(response.body.firstname).toEqual(user._firstname);
-        expect(response.body.lastname).toEqual(user._lastname);
+        expect(response.body.name).toEqual(user._name);
       });
   });
 
@@ -75,7 +74,7 @@ describe('retrieveConnectedUser controller tests', () => {
     return request(app.getHttpServer()).get('/users').expect(401);
   });
 
-  it('should return 500 if another error occured during the user retrieving', () => {
+  it('should return 500 if another error occurred during the user retrieving', () => {
     isAuthenticated = true;
     mockQueryBus.execute.mockRejectedValueOnce('unknown exception');
     return request(app.getHttpServer()).get('/users').expect(500);

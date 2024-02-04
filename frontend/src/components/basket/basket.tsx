@@ -41,7 +41,7 @@ export default function Basket() {
 
         {
           bets.length === 0
-            ? <div className='mt-4 italic font-semibold text-neutral-600 text-center'>{t('bet.addBetToStart')}</div>
+            ? <div className='h-full flex items-center justify-center font-semibold text-neutral-300 text-center uppercase'>{t('bet.emptyBasket')}</div>
             : <div className={`mx-4 overflow-y-auto max-h-2/3 ${type === BasketType.MULTIPLE && 'border-y border-neutral-400'}`}>
               {bets.map(bet => <BasketItem key={bet.id + bet.selectedOption} bet={bet} type={type} />)}
             </div>

@@ -1,4 +1,4 @@
-import { Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Post, UseGuards } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { CreateUserCommand } from '../../../app/commands/usecases/createUser/createUserCommand';
 import { getHttpException } from '../../DomainToHttpException';
@@ -12,10 +12,9 @@ export class CreateUserController {
   constructor(private commandBus: CommandBus) {}
 
   @Post('/users')
-  async createUser(@Authenticate() user: UserInfo): Promise<User> {
-    const first_name = user?.name ? user?.name.split(' ')[0] : 'John';
-    const name = user?.family_name ? user?.family_name : 'Doe';
-    return this.commandBus.execute(new CreateUserCommand(user.email, first_name, name)).catch((e) => {
+  async createUser(@Authenticate() user: UserInfo, @Body('name') name: string): Promise<User> {
+    name = name ? name : 'John Doe';
+    return this.commandBus.execute(new CreateUserCommand(user.email, name)).catch((e) => {
       throw getHttpException(e);
     });
   }

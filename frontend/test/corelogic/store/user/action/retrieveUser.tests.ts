@@ -9,7 +9,7 @@ import { Status } from '@/types/fetch.types'
 
 const httpMock = new HttpClientMocked();
 
-const will = { id: '1', email: 'william@gmail.com', firstname: 'will', lastname: 'iam' } as User;
+const will = { id: '1', email: 'william@gmail.com', name: 'will iam' } as User;
 
 beforeEach(() => {
   container.register<HttpClient>(AXIOS_HTTP_CLIENT, { useValue: httpMock });
@@ -38,8 +38,7 @@ test('should retrieve current connected user if he exists', async () => {
   const userStatus = retrieveConnectedUserStatus(store.getState());
 
   expect(currentState.id).toEqual(will.id);
-  expect(currentState.lastname).toEqual(will.lastname);
-  expect(currentState.firstname).toEqual(will.firstname);
+  expect(currentState.name).toEqual(will.name);
   expect(currentState.email).toEqual(will.email);
 
   expect(userStatus).toEqual(Status.SUCCEEDED);
@@ -51,14 +50,14 @@ test('should create current connected user if does not exist yet', async () => {
   httpMock.post.mockResolvedValue({ data: will });
 
   // When
-  await store.dispatch(retrieveUserThunk());
+  await store.dispatch(retrieveUserThunk({ name: 'John Doe'}));
 
   // Then
   const currentState = getConnectedUser(store.getState());
   const userStatus = retrieveConnectedUserStatus(store.getState());
 
   expect(httpMock.get).toHaveBeenCalledTimes(1);
-  expect(httpMock.post).toHaveBeenCalledTimes(1);
+  expect(httpMock.post).toHaveBeenNthCalledWith(1, '/users', {name: 'John Doe'});
 
   expect(currentState.id).toEqual(will.id);
   expect(currentState.email).toEqual(will.email);

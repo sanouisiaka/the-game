@@ -8,8 +8,7 @@ import { User } from '@prisma/client';
 import { UserAlreadyCreated } from '../../../../../src/app/domain/user/error/userAlreadyCreated.error';
 import { DomainError } from '../../../../../src/app/domain/domain.error';
 import { InvalidEmail } from '../../../../../src/app/domain/user/error/invalidEmail.error';
-import { InvalidLastname } from '../../../../../src/app/domain/user/error/invalidLastname.error';
-import { InvalidFirstname } from '../../../../../src/app/domain/user/error/invalidFirstname.error';
+import { InvalidName } from '../../../../../src/app/domain/user/error/invalidName.error';
 
 const feature = loadFeature('./test/acceptance/features/commands/createUser/createUser.feature');
 
@@ -34,8 +33,8 @@ defineFeature(feature, (test) => {
   };
 
   const whenICreateAUser = (when) => {
-    when(/I create a user "(.*)" "(.*)" with email "(.*)"/, async (firstname: string, lastname: string, email: string) => {
-      const createUserCommand: CreateUserCommand = new CreateUserCommand(email, firstname, lastname);
+    when(/I create a user "(.*)" with email "(.*)"/, async (name: string, email: string) => {
+      const createUserCommand: CreateUserCommand = new CreateUserCommand(email, name);
       return createUserCommandHandler.execute(createUserCommand).catch((e) => {
         handlerError = e;
         return Promise.resolve();
@@ -45,15 +44,13 @@ defineFeature(feature, (test) => {
 
   const thenTheUserIsCorrectlyCreated = (then) => {
     then(/the user "(.*)" with email "(.*)" is created/, async (name: string, email: string) => {
-      const names = name.split(' ');
       const user: User = await prisma.user.findUnique({ where: { email } });
 
       expect(user).not.toBeNull();
       expect(user).not.toBeUndefined();
       expect(user.id).not.toBeNull();
       expect(user.email).toEqual(email);
-      expect(user.firstname).toEqual(names[0]);
-      expect(user.lastname).toEqual(names[1]);
+      expect(user.name).toEqual(name);
       expect(user.createdAt).not.toBeNull();
     });
   };
@@ -69,7 +66,7 @@ defineFeature(feature, (test) => {
   test('Creating a user fail because the email is already use', ({ given, when, then }) => {
     given(/the email "(.*)" is taken/, async (email: string) => {
       await prisma.user.deleteMany({ where: { email } });
-      return prisma.user.create({ data: { email, firstname: 'a', lastname: 'user' } });
+      return prisma.user.create({ data: { email, name: 'user' } });
     });
 
     whenICreateAUser(when);
@@ -92,27 +89,15 @@ defineFeature(feature, (test) => {
     });
   });
 
-  test('Creating a user fail because the user has no lastname', ({ given, when, then }) => {
+  test('Creating a user fail because the user has no name', ({ given, when, then }) => {
     givenTheEmailIsNotUse(given);
 
     whenICreateAUser(when);
 
-    then(/the user creation fail because the user has no lastname/, () => {
+    then(/the user creation fail because the user has no name/, () => {
       expect(handlerError).not.toBeNull();
       expect(handlerError).not.toBeUndefined();
-      expect(handlerError instanceof InvalidLastname).toBeTruthy();
-    });
-  });
-
-  test('Creating a user fail because the user has no firstname', ({ given, when, then }) => {
-    givenTheEmailIsNotUse(given);
-
-    whenICreateAUser(when);
-
-    then(/the user creation fail because the user has no firstname/, () => {
-      expect(handlerError).not.toBeNull();
-      expect(handlerError).not.toBeUndefined();
-      expect(handlerError instanceof InvalidFirstname).toBeTruthy();
+      expect(handlerError instanceof InvalidName).toBeTruthy();
     });
   });
 });

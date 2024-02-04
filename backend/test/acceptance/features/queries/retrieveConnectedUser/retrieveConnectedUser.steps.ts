@@ -44,9 +44,8 @@ defineFeature(feature, (test) => {
     });
 
     given(/the user "(.*)" with email "(.*)" exists in BetThemAll/, async (name: string, email: string) => {
-      const names = name.split(' ');
       await prisma.user.deleteMany({ where: { email } });
-      await prisma.user.create({ data: { firstname: names[0], lastname: names[1], email } });
+      await prisma.user.create({ data: { name: name, email } });
     });
 
     whenIRetrieveTheConnectedUser(when);
@@ -54,8 +53,8 @@ defineFeature(feature, (test) => {
     then(/the user "(.*)" with email "(.*)" is returned/, (name: string, email: string) => {
       expect(loggedUser).not.toBeUndefined();
       expect(loggedUser._email).toEqual(email);
-      expect(loggedUser._firstname).toEqual(name.split(' ')[0]);
-      expect(loggedUser._lastname).toEqual(name.split(' ')[1]);
+      expect(loggedUser._name).toEqual(name);
+      expect(loggedUser._name).toEqual(name);
     });
   });
 

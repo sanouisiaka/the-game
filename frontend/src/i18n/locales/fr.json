@@ -7,9 +7,10 @@
   },
   "bet": {
     "bet": "Mise",
+    "draw": "Match nul",
     "last": "Mes derniers paris",
-    "addBetToStart": "Bet sur un match pour créer un ticket !",
-    "selectLeagueToStart": "Choisis une compétition pour y voir les prochains matches",
+    "emptyBasket": "Le ticket est vide.",
+    "selectLeagueToStart": "Choisis une compétition pour voir les prochains matches.",
     "potentialGain": "Gain potentiel",
     "totalPotentialGain": "Gain potentiel total",
     "parlayOdd": "Côte total",

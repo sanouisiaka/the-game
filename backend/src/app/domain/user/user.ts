@@ -1,36 +1,30 @@
-import { InvalidFirstname } from './error/invalidFirstname.error';
-import { InvalidLastname } from './error/invalidLastname.error';
 import { InvalidEmail } from './error/invalidEmail.error';
+import { InvalidName } from './error/invalidName.error';
 
 export class User {
-  private id: string;
-  private email: string;
-  private firstname: string;
-  private lastname: string;
+  private readonly id: string;
+  private readonly email: string;
+  private readonly name: string;
 
-  private constructor(id: string, email: string, firstname: string, lastname: string) {
+  private constructor(id: string, email: string, name: string) {
     this.id = id;
     this.email = email;
-    this.firstname = firstname;
-    this.lastname = lastname;
+    this.name = name;
   }
 
-  public static newUser(email: string, firstname: string, lastname: string): User {
-    return this.build(undefined, email, firstname, lastname);
+  public static newUser(email: string, name: string): User {
+    return this.build(undefined, email, name);
   }
 
-  public static build(id: string, email: string, firstname: string, lastname: string): User {
-    if (firstname.length <= 0) {
-      throw new InvalidFirstname();
-    }
-    if (lastname.length <= 0) {
-      throw new InvalidLastname();
+  public static build(id: string, email: string, name: string): User {
+    if (name.length <= 0) {
+      throw new InvalidName();
     }
     if (!this.isEmailValid(email)) {
       throw new InvalidEmail();
     }
 
-    return new User(id, email, firstname, lastname);
+    return new User(id, email, name);
   }
 
   get _id(): string {
@@ -41,12 +35,8 @@ export class User {
     return this.email;
   }
 
-  get _firstname(): string {
-    return this.firstname;
-  }
-
-  get _lastname(): string {
-    return this.lastname;
+  get _name(): string {
+    return this.name;
   }
 
   private static isEmailValid(email: string): boolean {

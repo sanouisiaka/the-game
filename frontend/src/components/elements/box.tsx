@@ -19,7 +19,7 @@ export default function Box(props: PropsWithChildren<{ title: string | undefined
   function DesktopBox() {
     return (
       <div className={
-        `h-full bg-white rounded-md flex-col overflow-hidden ${props.accordion ? 'hidden md:flex' : 'flex'}`}
+        `h-full bg-white rounded-md border border-neutral-300 flex-col overflow-hidden ${props.accordion ? 'hidden md:flex' : 'flex'}`}
       >
 
         {props.title &&

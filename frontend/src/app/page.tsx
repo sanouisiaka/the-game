@@ -4,19 +4,26 @@ import Bento from '@/components/bento';
 import { useAppDispatch } from '@/hooks';
 import { retrieveUserThunk } from '@/corelogic/store/user/user.store';
 import { retrieveLeaguesThunk } from '@/corelogic/store/leagues/leagues.store';
+import { getSession } from "next-auth/react";
 
 export default function Home() {
 
-  const dispatch = useAppDispatch();
-  dispatch(retrieveUserThunk());
-  dispatch(retrieveLeaguesThunk());
+	getSession().then(session => {
+		const name = session?.user?.name ? { name: session?.user?.name } : undefined;
+		dispatch(retrieveUserThunk(name));
 
-  return (
-    <div className='h-full flex flex-col bg-neutral-50'>
-      <div className='overflow-scroll md:h-5/6'>
-        <Bento />
-      </div>
-    </div>
-  );
+	});
+
+
+	const dispatch = useAppDispatch();
+	dispatch(retrieveLeaguesThunk());
+
+	return (
+		<div className='h-5/6 overflow-scroll flex flex-col bg-neutral-50'>
+			<div>
+				<Bento/>
+			</div>
+		</div>
+	);
 
 }

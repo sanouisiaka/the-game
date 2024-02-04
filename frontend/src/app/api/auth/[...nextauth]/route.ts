@@ -21,7 +21,6 @@ export const authOptions = {
     async session({ session, token }:any) {
       // Send properties to the client, like an access_token and user id from a provider.
       session.id_token = token.id_token
-
       return session
     },
     async jwt({ token, account }: any) {
@@ -40,7 +39,10 @@ export const authOptions = {
             token.id_token = res.data.id_token;
             token.expires_at = Math.floor(Date.now() / 1000 + res.data.expires_in);
           })
-          .catch(() => console.log("ERR IN REFRESHING TOKEN"));
+          .catch((e) => {
+            token = undefined;
+            console.log("ERR IN REFRESHING TOKEN \n" + JSON.stringify(e));
+          });
 
       }
 

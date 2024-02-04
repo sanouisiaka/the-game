@@ -4,7 +4,7 @@ import { UserNotFoundError } from '@/corelogic/domain/user/errors/userNotFound.e
 import { User } from '@/corelogic/domain/user/user'
 import { container } from '@/di'
 
-export async function retrieveUser(): Promise<User> {
+export async function retrieveUser(name: string | undefined): Promise<User> {
   const userRepository = container.resolve<IUserRepository>(USER_REPOSITORY);
   return userRepository.getUser()
     .then((u) => {
@@ -12,7 +12,7 @@ export async function retrieveUser(): Promise<User> {
     })
     .catch((err: DomainError) => {
       if (err instanceof UserNotFoundError) {
-        return userRepository.createUser()
+        return userRepository.createUser(name)
           .catch((e: DomainError) => {
             throw e;
           })

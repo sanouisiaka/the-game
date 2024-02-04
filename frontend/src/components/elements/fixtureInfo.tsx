@@ -42,7 +42,7 @@ export default function FixtureInfo(props: { id: string }) {
             </div>
 
             <div className='flex items-center justify-center font-semibold text-2xl'>
-              <div className={`pr-5 ${getWinnerId(fixture) === fixture.homeTeam.id && 'text-lime-600'}`}>{fixture.awayTeam.goal}</div>
+              <div className={`pr-5 ${getWinnerId(fixture) === fixture.homeTeam.id && 'text-lime-600'}`}>{fixture.homeTeam.goal}</div>
               <div>-</div>
               <div className={`pl-5 ${getWinnerId(fixture) === fixture.awayTeam.id && 'text-lime-600'}`}>{fixture.awayTeam.goal}</div>
             </div>

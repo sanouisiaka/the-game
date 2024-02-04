@@ -6,26 +6,27 @@ import { Status } from '@/types/fetch.types'
 
 
 const initialState = {
-  connectedUser: {} as User,
-  status: Status.IDLE
+	connectedUser: {} as User,
+	status: Status.IDLE
 };
 
-export const retrieveUserThunk = createAsyncThunk<User>('/user/retrieveUser', retrieveUser);
+export const retrieveUserThunk = createAsyncThunk('/user/retrieveUser',
+	async (param: { name: string } | undefined) => retrieveUser(param?.name));
 
 export const userSlice = createSlice({
-  name: 'user',
-  initialState,
-  reducers: {},
-  extraReducers(builder) {
-    builder.addCase(retrieveUserThunk.fulfilled, (state, action) => {
-      state.status = Status.SUCCEEDED;
-      state.connectedUser = action.payload;
-    })
+	name: 'user',
+	initialState,
+	reducers: {},
+	extraReducers(builder) {
+		builder.addCase(retrieveUserThunk.fulfilled, (state, action) => {
+			state.status = Status.SUCCEEDED;
+			state.connectedUser = action.payload;
+		})
 
-    builder.addCase(retrieveUserThunk.rejected, (state) => {
-      state.status = Status.FAILED;
-    })
-  }
+		builder.addCase(retrieveUserThunk.rejected, (state) => {
+			state.status = Status.FAILED;
+		})
+	}
 })
 
 export default userSlice.reducer

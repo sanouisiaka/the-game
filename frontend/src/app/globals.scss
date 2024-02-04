@@ -23,9 +23,10 @@ body {
   scrollbar-width: thin;
 }
 
-*{
+* {
   -ms-overflow-style: none;
 }
+
 ::-webkit-scrollbar {
   display: none;
 }
@@ -46,3 +47,13 @@ input[type=number] {
 }
 
 
+.banner-wip {
+  background: repeating-linear-gradient(
+                  -45deg,
+                  #000000,
+                  #000000 15px,
+                  #ffbb15 15px,
+                  #ffbb15 30px
+  );
+
+}

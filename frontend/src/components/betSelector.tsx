@@ -23,7 +23,7 @@ export default function BetSelector() {
 
   const [selectedLeagueId, selectLeague] = useState(-1);
 
-  const initState = selectedLeagueId === -1 && fixtures.length === 0;
+  const initState = selectedLeagueId === -1;
 
   function handleLeagueClick(league: number) {
     selectLeague(league);
@@ -55,7 +55,9 @@ export default function BetSelector() {
       {leagues.length > 0 &&
         <div className='grow overflow-y-auto m-2'>
           {initState &&
-            <div className='mt-4 italic font-semibold text-neutral-600 text-center'>{t('bet.selectLeagueToStart')}</div>
+            <div className='font-semibold text-neutral-950 text-center flex align-middle justify-center uppercase h-full items-center'>
+              {t('bet.selectLeagueToStart')}
+            </div>
           }
           {
             loading ? <div className='h-full flex'>

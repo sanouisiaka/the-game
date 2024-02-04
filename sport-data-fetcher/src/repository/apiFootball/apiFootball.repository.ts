@@ -6,6 +6,8 @@ import { AxiosResponse } from 'axios';
 import { ApiFootballMapper } from './apiFootball.mapper';
 import { ApiResponseNotFound } from '../../app/domain/errors/apirequest.error';
 
+const timeout = (second: number) => new Promise((resolve) => setTimeout(resolve, second * 1000));
+
 @Injectable()
 export class ApiFootballRepository implements IFootballRepository {
   leaguesId = new Map<League, number>([
@@ -63,6 +65,7 @@ export class ApiFootballRepository implements IFootballRepository {
         .then((r) => this.apiFootMapper.oddsDataToDomain(r));
 
       bets.push(...b);
+      await timeout(61);
     } while (page && totalPage && page < totalPage);
 
     return bets;

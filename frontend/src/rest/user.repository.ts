@@ -27,8 +27,8 @@ export class UserRepository implements IUserRepository {
       })
   }
 
-  async createUser(): Promise<User> {
-    return this.axiosHttp.post<AxiosResponse<User>>(UserRepository.BASE_PATH)
+  async createUser(name: string | undefined): Promise<User> {
+    return this.axiosHttp.post<AxiosResponse<User>>(UserRepository.BASE_PATH, { name })
       .then(response => response.data as User)
       .catch(() => {
         throw new CannotCreateUserError();

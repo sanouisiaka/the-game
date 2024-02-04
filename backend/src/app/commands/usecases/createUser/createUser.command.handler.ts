@@ -17,7 +17,7 @@ export class CreateUserCommandHandler implements ICommandHandler<CreateUserComma
       if (userFromDb) {
         throw new UserAlreadyCreated();
       }
-      return this.userRepository.createUser(User.newUser(command.email, command.firstname, command.lastname)).then((u) => {
+      return this.userRepository.createUser(User.newUser(command.email, command.name)).then((u) => {
         this.logger.log('user ' + u._id + ' created');
         return u;
       });
